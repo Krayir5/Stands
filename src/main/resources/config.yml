@@ -1,0 +1,20 @@
+StarPlatinum:
+  damage: 1.0
+  hits: 5
+  knockback: 0.3 
+TheWorld:
+  time_duration: 5
+  damage: 1.0
+  hits: 5
+  knockback: 0.3
+CrazyDiamond:
+  time_duration: 5
+  amplifier: 0
+MagicianRed:
+  fireball_speed: 2.0
+  damage: 5.0
+  fireball_count: 4
+HermitPurple:
+  vine_length: 5
+  pull_strength: 1.3
+  damage: 1.5
