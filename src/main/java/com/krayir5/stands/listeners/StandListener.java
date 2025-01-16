@@ -114,28 +114,6 @@ public class StandListener implements Listener {
             return;
         }
 
-        //Tusk 
-        /*if (itemInHand == Material.NETHER_STAR) {
-            double speedMultiplier = config.getDouble("MagicianRed.fireball_speed", 2.0);
-            double damage = config.getDouble("MagicianRed.fireball_damage", 5.0);
-            int snawballCount = config.getInt("MagicianRed.fireball_count", 4);
-            String msg = ChatColor.RED + "Tusk: " + ChatColor.BOLD + "CHIMIMIN!";
-            event.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(msg));
-            for (int i = 0; i < Snowball; i++) {
-                Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                    Snowball snowball = player.getWorld().spawn(player.getEyeLocation().add(player.getLocation().getDirection()), Snowball.class);
-                    snowball.setShooter(player);
-                    snowball.setDirection(player.getLocation().getDirection().normalize().multiply(speedMultiplier));
-                    snowball.setYield((float) damage);
-                }, i * 5L);
-            }
-            if (player.getInventory().getItemInMainHand().getAmount() > 1) {
-                player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
-            } else {
-                player.getInventory().setItemInMainHand(null);
-            }
-        }*/
-
         // The World: Time Stop
         if (itemInHand == Material.NETHERITE_INGOT) {
             int duration = config.getInt("TheWorld.time_duration", 5) * 20; // Duration in ticks
