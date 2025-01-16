@@ -1,6 +1,6 @@
 name: stands
 main: com.krayir5.stands.Plugin
-version: 1.0
+version: 1.0.1
 api-version: 1.16
 description: Adds Stand powers form JoJo's Bizarre Adventure
 permission: standp.admin
