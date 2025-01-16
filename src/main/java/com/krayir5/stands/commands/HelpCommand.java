@@ -16,6 +16,8 @@ public class HelpCommand implements CommandExecutor {
         stands.put("CrazyDiamond", "You can heal another entity. You need to use diamond to do it.");
         stands.put("MagicianRed", "You can throw fireballs at your enemies. You need a blaze rod to use it");
         stands.put("HermitPurple", "You can pull enemies towards you. You need feather to use it.");
+        stands.put("KillerQueen", "You can turn any block to a explosive! You need Quartz to use it.");
+        stands.put("NovemberRain", "A rain that contains small area but a powerfull one. You need a Nether Star to activate it.");
     }
 
     @Override

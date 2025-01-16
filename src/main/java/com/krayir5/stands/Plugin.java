@@ -1,13 +1,22 @@
 package com.krayir5.stands;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.krayir5.stands.commands.HelpCommand;
 import com.krayir5.stands.commands.StandPCommand;
 import com.krayir5.stands.commands.StandsCommand;
 import com.krayir5.stands.listeners.StandListener;
+import com.krayir5.stands.utils.Metrics;
 
 public class Plugin extends JavaPlugin
 {
@@ -22,7 +31,30 @@ public class Plugin extends JavaPlugin
     getCommand("standp").setExecutor(new StandPCommand(this));
     getServer().getPluginManager().registerEvents(new StandListener(this), this);
     saveDefaultConfig();
+    updateConfig();
+    Metrics metrics = new Metrics(this, 24363);
   }
+  
+  public void updateConfig() {
+    File configFile = new File(getDataFolder(), "config.yml");
+    try {
+        InputStream inputStream = getResource("config.yml");
+        Reader reader = new InputStreamReader(inputStream);
+        FileConfiguration defaultConfig = YamlConfiguration.loadConfiguration(reader);
+        FileConfiguration currentConfig = YamlConfiguration.loadConfiguration(configFile);
+
+        for (String key : defaultConfig.getKeys(true)) {
+            if (!currentConfig.contains(key)) {
+                currentConfig.set(key, defaultConfig.get(key));
+            }
+        }
+
+        currentConfig.save(configFile);
+    } catch (IOException e) {
+        LOGGER.log(Level.SEVERE, "Failed to update config file: {0}", e.getMessage());
+    }
+}
+
   @Override
   public void onDisable()
   {

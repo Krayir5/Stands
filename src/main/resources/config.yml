@@ -1,20 +1,27 @@
 StarPlatinum:
   damage: 1.0
   hits: 5
-  knockback: 0.3 
+  knockback: 0.3
 TheWorld:
   time_duration: 5
   damage: 1.0
   hits: 5
   knockback: 0.3
 CrazyDiamond:
-  time_duration: 5
+  time_duration: 10
   amplifier: 0
 MagicianRed:
   fireball_speed: 2.0
-  damage: 5.0
-  fireball_count: 4
+  damage: 3.0
+  fireball_count: 3
 HermitPurple:
-  vine_length: 5
+  vine_length: 4
   pull_strength: 1.3
-  damage: 1.5
+  damage: 3.0
+KillerQueen:
+  explosion_power: 2.0
+  explosion_delay: 3
+NovemberRain:
+  radius: 10
+  duration: 5
+  damage: 2.0
