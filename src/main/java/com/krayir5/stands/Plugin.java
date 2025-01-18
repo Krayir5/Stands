@@ -22,6 +22,7 @@ public class Plugin extends JavaPlugin
 {
   private static final Logger LOGGER=Logger.getLogger("Stands");
   
+  @SuppressWarnings("")
   @Override
   public void onEnable()
   {
@@ -32,6 +33,7 @@ public class Plugin extends JavaPlugin
     getServer().getPluginManager().registerEvents(new StandListener(this), this);
     saveDefaultConfig();
     updateConfig();
+    @SuppressWarnings("unused")
     Metrics metrics = new Metrics(this, 24363);
   }
   

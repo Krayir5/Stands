@@ -17,6 +17,8 @@ public class StandsCommand implements CommandExecutor {
         stands.put("HermitPurple", "You can pull enemies towards you. You need feather to use it.");
         stands.put("KillerQueen", "You can turn any block to a explosive! You need Quartz to use it.");
         stands.put("NovemberRain", "A rain that contains small area but a powerfull one. You need a Nether Star to activate it.");
+        stands.put("SilverChariot", "A powerfull and speedfull stand that shivers his sword to his enemies. You need an iron sword to use it.");
+        stands.put("Tusk", "A long range stand that can shoot nails to his enemies. You need spider eye to use it.");
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
