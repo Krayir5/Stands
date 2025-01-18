@@ -20,6 +20,8 @@ public class HelpCommand implements CommandExecutor {
         stands.put("NovemberRain", "A rain that contains small area but a powerfull one. You need a Nether Star to activate it.");
         stands.put("SilverChariot", "A powerfull and speedfull stand that shivers his sword to his enemies. You need an iron sword to use it.");
         stands.put("Tusk", "A long range stand that can shoot nails to his enemies. You need spider eye to use it.");
+        stands.put("HierophantGreen", "A long range stand that can shoot emeralds to his enemies. You need emerald to use it.");
+        stands.put("HeavensDoor", "A stand that can open his enemies like a book. You need a book to use it.");
     }
 
     @Override

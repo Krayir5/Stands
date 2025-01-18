@@ -1,5 +1,7 @@
 package com.krayir5.stands.listeners;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -19,6 +21,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -30,7 +33,7 @@ import com.krayir5.stands.utils.Cooldown;
 
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
-
+@SuppressWarnings("")
 public class StandListener implements Listener {
 
     private final Plugin plugin;
@@ -140,7 +143,7 @@ public class StandListener implements Listener {
         double damage = config.getDouble("SilverChariot.damage", 1.0);
         int hits = config.getInt("SilverChariot.hits", 5);
         double knockbackStrength = config.getDouble("SilverChariot.knockback", 0.2);    
-        int cooldownTime = config.getInt("Tusk.cooldown", 5) * 1000;
+        int cooldownTime = config.getInt("SilverChariot.cooldown", 5) * 1000;
 
         if (cooldown.isOnCooldown("SilverChariot", playerId)) {
             long remainingTime = cooldown.getRemainingTime("SilverChariot", playerId);
@@ -148,7 +151,7 @@ public class StandListener implements Listener {
             return;
         }
         cooldown.setCooldown("SilverChariot", playerId, cooldownTime);
-        event.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText( ChatColor.GRAY +"Silver Chariot: "+ ChatColor.BOLD +"Hora Rush!"));
+        event.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.GRAY +"Silver Chariot: "+ ChatColor.BOLD +"Hora Rush!"));
             for (int i = 0; i < hits; i++) {
                 Bukkit.getScheduler().runTaskLater(plugin, () -> {
                     if (target.isDead()) return;
@@ -159,6 +162,45 @@ public class StandListener implements Listener {
                     target.getWorld().spawnParticle(Particle.CRIT, target.getLocation().add(0.5, 1, 0.5), 15, 0.3, 0.3, 0.3, 0.02);
                 }, i * 5L);
             }
+        }
+
+        //Heaven's Door: Book Transmutation
+        if (itemInHand == Material.BOOK) {
+            Player target = (Player) entity;
+            double damage = config.getDouble("HeavensDoor.damage", 1.0);
+            int duration = config.getInt("HeavensDoor.duration", 30) * 20;
+            int cooldownTime = config.getInt("HeavensDoor.cooldown", 120) * 1000;
+
+            if (cooldown.isOnCooldown("HeavensDoor", playerId)) {
+                long remainingTime = cooldown.getRemainingTime("HeavensDoor", playerId);
+                event.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, 
+                    TextComponent.fromLegacyText(ChatColor.RED + "Heaven's Door is on cooldown! You need to wait " + 
+                    ChatColor.GRAY + ChatColor.BOLD + remainingTime + " second."));
+                return;
+            }
+            cooldown.setCooldown("HeavensDoor", playerId, cooldownTime);
+            target.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 60, 0, false, false));
+            target.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 60, 128, false, false));
+            
+            target.damage(damage, player);
+            event.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, 
+            TextComponent.fromLegacyText(ChatColor.WHITE + "Heaven's Door: " + ChatColor.BOLD + "Book Transmutation!"));
+            Listener moveListener = new Listener() {
+                @EventHandler
+                public void onPlayerMove(PlayerMoveEvent moveEvent) {
+                    Player movingPlayer = moveEvent.getPlayer();
+                    if (movingPlayer.equals(target)) {
+                        if (moveEvent.getTo() != null && !moveEvent.getFrom().toVector().equals(moveEvent.getTo().toVector())) {
+                            moveEvent.setCancelled(true);
+                        }
+                    }
+                }
+            };
+            Bukkit.getPluginManager().registerEvents(moveListener, plugin);
+            Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                PlayerMoveEvent.getHandlerList().unregister(moveListener);
+                target.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, duration, 1, false, false));
+            }, 40L);
         }
 
     }
@@ -178,12 +220,14 @@ public class StandListener implements Listener {
         if (itemInHand == Material.NETHERITE_INGOT) {
             int duration = config.getInt("TheWorld.time_duration", 5) * 20;
             int cooldownTime = config.getInt("TheWorld.cooldown", 240) * 1000;
+
             if (cooldown.isOnCooldown("TheWorld", playerId)) {
                 long remainingTime = cooldown.getRemainingTime("TheWorld", playerId);
                 event.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "The World is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " second."));
                 return;
             }
             cooldown.setCooldown("TheWorld", playerId, cooldownTime);
+            Set<Player> affectedPlayers = new HashSet<>();
             Bukkit.getOnlinePlayers().forEach(p -> {
                 if (!p.equals(player)) {
                     p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, duration, 128, false, false));
@@ -192,28 +236,44 @@ public class StandListener implements Listener {
                     p.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, duration, 128, false, false));
                     p.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, duration, 128, false, false));
                     p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.GOLD + "The World: " + ChatColor.AQUA + player.getName() + " stopped the time!"));
+                    affectedPlayers.add(p);
                 }
             });
             Bukkit.getWorlds().forEach(world -> world.setGameRule(GameRule.MOB_GRIEFING, false));
             event.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.GOLD + "ZA WARUDO!" + ChatColor.RED + ChatColor.BOLD + " TOKI WO TOMARE!!!"));
             player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, duration, 1, false, false));
             player.getWorld().spawnParticle(Particle.CAMPFIRE_COSY_SMOKE, player.getLocation().add(0.1, 1.5, 0.1), 20, 0.3, 0.3, 0.3, 0.02);
+        
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                 if (!onlinePlayer.equals(player)) {
                     onlinePlayer.hidePlayer(plugin, player);
                 }
             }
-
+            Listener moveListener = new Listener() {
+                @EventHandler
+                public void onPlayerMove(PlayerMoveEvent moveEvent) {
+                    Player movingPlayer = moveEvent.getPlayer();
+                    if (affectedPlayers.contains(movingPlayer)) {
+                        if (!moveEvent.getFrom().toVector().equals(moveEvent.getTo().toVector())) {
+                            moveEvent.setCancelled(true);
+                        }
+                    }
+                }
+            };
+            Bukkit.getPluginManager().registerEvents(moveListener, plugin);
             Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                Bukkit.getOnlinePlayers().forEach(p -> {p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.GOLD + "The World: " + ChatColor.RED + "Time will resume now!"));});
+                Bukkit.getOnlinePlayers().forEach(p -> {
+                    p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.GOLD + "The World: " + ChatColor.RED + "Time will resume now!"));
+                });
                 Bukkit.getWorlds().forEach(world -> world.setGameRule(GameRule.MOB_GRIEFING, true));
                 for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                     if (!onlinePlayer.equals(player)) {
                         onlinePlayer.showPlayer(plugin, player);
                     }
                 }
+                PlayerMoveEvent.getHandlerList().unregister(moveListener);
             }, duration);
-
+        
             if (player.getInventory().getItemInMainHand().getAmount() > 1) {
                 player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
             } else {
@@ -257,6 +317,7 @@ public class StandListener implements Listener {
             cooldown.setCooldown("MagicianRed", playerId, cooldownTime);
             String msg = ChatColor.RED + "Magician Red: " + ChatColor.BOLD + "Cross Fire Hurricane!";
             event.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(msg));
+            //Bukkit.getWorlds().forEach(world -> world.setGameRule(GameRule.MOB_GRIEFING, false));
             for (int i = 0; i < fireballCount; i++) {
                 Bukkit.getScheduler().runTaskLater(plugin, () -> {
                     Fireball fireball = player.getWorld().spawn(player.getEyeLocation().add(player.getLocation().getDirection()), Fireball.class);
@@ -266,6 +327,9 @@ public class StandListener implements Listener {
                     fireball.setIsIncendiary(true);
                 }, i * 5L);
             }
+            /*Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                Bukkit.getWorlds().forEach(world -> world.setGameRule(GameRule.MOB_GRIEFING, true));
+            }, fireballCount * 15L);*/
             if (player.getInventory().getItemInMainHand().getAmount() > 1) {
                 player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
             } else {
@@ -435,5 +499,46 @@ public class StandListener implements Listener {
                 }
             }
         }
+
+        //Hierophant Green: Emerald Splash
+        if (itemInHand == Material.EMERALD) {
+            int cooldownTime = config.getInt("HierophantGreen.cooldown", 30) * 1000;
+            double damage = config.getDouble("HierophantGreen.damage", 3.0);
+            int hgCount = config.getInt("HierophantGreen.ammo_count", 3);
+
+            if (cooldown.isOnCooldown("HierophantGreen", playerId)) {
+                long remainingTime = cooldown.getRemainingTime("HierophantGreen", playerId);
+                event.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(
+                    ChatColor.RED + "Hierophant Green is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " seconds."));
+                return;
+            }
+            cooldown.setCooldown("HierophantGreen", playerId, cooldownTime);
+            event.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.GREEN + "Hierophant Green: " + ChatColor.BOLD + "Emerald Splash!"));
+            if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                for (int i = 0; i < hgCount; i++) {
+                    Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                        Snowball hgProjectile = player.launchProjectile(Snowball.class);
+                        hgProjectile.setVelocity(player.getLocation().getDirection().multiply(2));
+                        hgProjectile.setShooter(player);
+                        Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+                            if (!hgProjectile.isDead()) {
+                                hgProjectile.getWorld().getNearbyEntities(hgProjectile.getLocation(), 0.5, 0.5, 0.5).forEach(entity -> {
+                                    if (entity instanceof LivingEntity && entity != player) {
+                                        LivingEntity target = (LivingEntity) entity;
+                                        target.damage(damage, player);
+                                        hgProjectile.remove();
+                                    }
+                                });
+                            }
+                        }, 0L, 1L);
+                    }, i * 5L);
+                }
+                if (player.getInventory().getItemInMainHand().getAmount() > 1) {
+                    player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
+                } else {
+                    player.getInventory().setItemInMainHand(null);
+                }
+            }
+        }                
     }
 }

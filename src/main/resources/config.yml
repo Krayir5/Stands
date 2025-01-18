@@ -5,7 +5,7 @@ StarPlatinum:
   knockback: 0.3
 TheWorld:
   cooldown: 240        # This cooldown is for stopping time
-  cooldown_p: 5      # This cooldown is for punch
+  cooldown_p: 5        # This cooldown is for punch
   time_duration: 5
   damage: 1.0
   hits: 5
@@ -41,3 +41,11 @@ SilverChariot:
 Tusk:
   cooldown: 15
   damage: 3.0
+HierophantGreen:
+  cooldown: 30
+  damage: 1.0
+  ammo_count: 3
+HeavensDoor:
+  cooldown: 120
+  damage: 1.0
+  duration: 30
