@@ -1,8 +1,27 @@
+Stands:                # Those are the only stand for now, so you can change the rarity BUT you can't add stands.
+  Common:
+    - Crazy Diamond
+    - Silver Chariot
+    - Star Platinum
+    - The WorldP
+  Rare:
+    - Magician Red
+    - Hermit Purple
+  Epic:
+    - November Rain
+    - Killer Queen
+    - Tusk
+  Legendary:
+    - Heavens Door
+    - The World
+    - Hierophant Green
+# Can throw really fast punches
 StarPlatinum:
   cooldown: 5
   damage: 1.0
   hits: 5
   knockback: 0.3
+# Can throw really fast punches and plus stop time
 TheWorld:
   cooldown: 240        # This cooldown is for stopping time
   cooldown_p: 5        # This cooldown is for punch
@@ -10,41 +29,51 @@ TheWorld:
   damage: 1.0
   hits: 5
   knockback: 0.3
+# Can heal another entities
 CrazyDiamond:
   cooldown: 15
   time_duration: 10
   amplifier: 0
+# Can throw fireballs
 MagicianRed:
   cooldown: 30
   fireball_speed: 2.0
   damage: 3.0
   fireball_count: 3
+  mob_grief: true
+# Can pull entities and damage them
 HermitPurple:
   cooldown: 20
   vine_length: 4
   pull_strength: 1.3
   damage: 3.0
+# Can turn any block into a bomb
 KillerQueen:
   cooldown: 120
-  explosion_power: 2.0
+  explosion_power: 0.0  # I made it 0.0 because for some safety reasons if you want it to explode you can change it
   explosion_delay: 3
+# Can make it acidic rain in a spesific area
 NovemberRain:
   cooldown: 600
   radius: 10
   duration: 5
   damage: 2.0
+# Can throw really fast sword hits
 SilverChariot:
   cooldown: 5
   damage: 0.5
   hits: 7
   knockback: 0.2
+# Can throw his nails
 Tusk:
   cooldown: 15
   damage: 3.0
+# Can throw emerald
 HierophantGreen:
   cooldown: 30
   damage: 1.0
   ammo_count: 3
+# Can open his enemies like a book and give them weakness
 HeavensDoor:
   cooldown: 120
   damage: 1.0

@@ -14,7 +14,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.krayir5.stands.commands.HelpCommand;
 import com.krayir5.stands.commands.StandPCommand;
+import com.krayir5.stands.commands.StandPick;
+import com.krayir5.stands.commands.StandUse;
 import com.krayir5.stands.commands.StandsCommand;
+import com.krayir5.stands.listeners.StandItem;
 import com.krayir5.stands.listeners.StandListener;
 import com.krayir5.stands.utils.Metrics;
 
@@ -26,11 +29,18 @@ public class Plugin extends JavaPlugin
   @Override
   public void onEnable()
   {
+    if (!getDataFolder().exists()) {
+      getDataFolder().mkdirs();
+  }
     LOGGER.info("You expected a message, but it was me, DIO!");
     getCommand("sphelp").setExecutor(new HelpCommand());
     getCommand("stands").setExecutor(new StandsCommand());
     getCommand("standp").setExecutor(new StandPCommand(this));
-    getServer().getPluginManager().registerEvents(new StandListener(this), this);
+    File standFile = new File(getDataFolder(), "stands.yml");
+    getCommand("standpick").setExecutor(new StandPick(getConfig(), standFile));
+    getCommand("standuse").setExecutor(new StandUse(standFile));
+    getServer().getPluginManager().registerEvents(new StandItem(), this);
+    getServer().getPluginManager().registerEvents(new StandListener(this, standFile), this);
     saveDefaultConfig();
     updateConfig();
     @SuppressWarnings("unused")

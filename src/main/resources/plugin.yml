@@ -1,9 +1,11 @@
 name: stands
 main: com.krayir5.stands.Plugin
-version: 1.0.3
+version: 1.1
 api-version: 1.16
 description: Adds Stand powers form JoJo's Bizarre Adventure
 permission: standp.admin
+prefix: Stands
+authors: [ Krayir5 ]
 permissions:
   standp.admin:
     description: A permisson to use all stand commands
@@ -16,5 +18,11 @@ commands:
     description: Stand komutları.
     usage: /stands <stand adı>
   standp:
-    description: Stand komutları.
+    description: Admin commands.
     usage: /standp
+  standpick:
+    description: A.
+    usage: /standpick
+  standuse:
+    description: B.
+    usage: /standuse
