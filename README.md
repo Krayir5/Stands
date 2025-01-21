@@ -9,4 +9,4 @@ A plugin that adds Stand abilities from JoJo's Bizarre Adventure. You can use th
 5. /standuse With this command your stand item will be given to your left hand.
 
 -PERMISSIONS-
-standp.admin The person that has this permission can use /standp command
+1. standp.admin The person that has this permission can use /standp command
