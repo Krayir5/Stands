@@ -11,17 +11,17 @@ public class HelpCommand implements CommandExecutor {
     private final Map<String, String> stands = new HashMap<>();
 
     public HelpCommand() {
-        stands.put("TheWorld", "A stand that can stop time. You could use it with a netherite ingot. With a golden ingot you could MUDA MUDA your enemies!");
-        stands.put("StarPlatinum", "A stand that is so powerfull. You could use iron ingot to activate it's power!");
-        stands.put("CrazyDiamond", "You can heal another entity. You need to use diamond to do it.");
-        stands.put("MagicianRed", "You can throw fireballs at your enemies. You need a blaze rod to use it");
-        stands.put("HermitPurple", "You can pull enemies towards you. You need feather to use it.");
-        stands.put("KillerQueen", "You can turn any block to a explosive! You need Quartz to use it.");
-        stands.put("NovemberRain", "A rain that contains small area but a powerfull one. You need a Nether Star to activate it.");
-        stands.put("SilverChariot", "A powerfull and speedfull stand that shivers his sword to his enemies. You need an iron sword to use it.");
-        stands.put("Tusk", "A long range stand that can shoot nails to his enemies. You need spider eye to use it.");
-        stands.put("HierophantGreen", "A long range stand that can shoot emeralds to his enemies. You need emerald to use it.");
-        stands.put("HeavensDoor", "A stand that can open his enemies like a book. You need a book to use it.");
+        stands.put("TheWorld", "A stand that can stop time.");
+        stands.put("StarPlatinum", "A stand that is so powerfull.");
+        stands.put("CrazyDiamond", "You can heal another entity.");
+        stands.put("MagicianRed", "You can throw fireballs at your enemies.");
+        stands.put("HermitPurple", "You can pull enemies towards you.");
+        stands.put("KillerQueen", "You can turn any block to a explosive!");
+        stands.put("NovemberRain", "A rain that contains small area but a powerfull one.");
+        stands.put("SilverChariot", "A powerfull and speedfull stand that shivers his sword to his enemies.");
+        stands.put("Tusk", "A long range stand that can shoot nails to his enemies.");
+        stands.put("HierophantGreen", "A long range stand that can shoot emeralds to his enemies.");
+        stands.put("HeavensDoor", "A stand that can open his enemies like a book.");
     }
 
     @Override
@@ -34,6 +34,8 @@ public class HelpCommand implements CommandExecutor {
         sender.sendMessage("§aHelp Menu:");
         sender.sendMessage("§e/sphelp stands - Show you all of the registered stands.");
         sender.sendMessage("§e/stands <StandName> - Shows you a spesific stands abilities.");
+        sender.sendMessage("§e/standpick - With this command Stand Arrow will choose your stand.");
+        sender.sendMessage("§e/standuse - Gives you your stand item.");
         return true;
     }
 }
