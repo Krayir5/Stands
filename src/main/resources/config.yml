@@ -1,80 +1,146 @@
-Stands:                # Those are the only stand for now, so you can change the rarity BUT you can't add stands.
+Stands:                # Those are the only stands for now, so you can change the rarity BUT you can't add stands.(You can delete one so nobody can get that stand)
   Common:
-    - Crazy Diamond
+    - Hermit Purple
     - Silver Chariot
-    - Star Platinum
-    - The WorldP
   Rare:
     - Magician Red
-    - Hermit Purple
+    - Tusk
+    - Crazy Diamond
+    - Soft & Wet
   Epic:
     - November Rain
     - Killer Queen
-    - Tusk
+    - Hierophant Green
+    - Sexy Pistols
   Legendary:
     - Heavens Door
     - The World
-    - Hierophant Green
-# Can throw really fast punches
+    - Star Platinum
+
+# Can throw really fast punches and plus stop time
 StarPlatinum:
-  cooldown: 5
-  damage: 1.0
-  hits: 5
-  knockback: 0.3
+  #This part is for stopping time
+  cooldown: 240
+  time_duration: 5
+  #This part is for punch ability
+  cooldown_p: 5
+  damage: 1.5
+  hits: 4
+  knockback: 0.5
+  #This part is for Star Finger
+  sf_cooldown: 30
+  sf_damage: 4.0
+  sf_range: 10.0
+
 # Can throw really fast punches and plus stop time
 TheWorld:
-  cooldown: 240        # This cooldown is for stopping time
-  cooldown_p: 5        # This cooldown is for punch
+  #This part is for stopping time
+  cooldown: 240
   time_duration: 5
-  damage: 1.0
-  hits: 5
-  knockback: 0.3
+  #This part is for punch ability
+  cooldown_p: 5
+  damage: 1.5
+  hits: 4
+  knockback: 0.5
+  #This part is for knife throwing
+  k_cooldown: 10
+  kniceCount: 3
+  k_damage: 4.0
+
 # Can heal another entities
 CrazyDiamond:
-  cooldown: 15
+  #This part is for healing
+  heal_cooldown: 30
   time_duration: 10
   amplifier: 0
+  #This part is for punch ability
+  punch_cooldown: 5
+  damage: 1.5
+  hits: 4
+  knockback: 0.5
+
 # Can throw fireballs
 MagicianRed:
+  #This part is for Cross Fire Hurricane
   cooldown: 30
   fireball_speed: 2.0
-  damage: 3.0
+  f_damage: 3.0
   fireball_count: 3
   mob_grief: true
+  #This part is for punch ability
+  cooldown_punch: 5
+  damage: 1.0
+  hits: 3
+  knockback: 0.4
+
 # Can pull entities and damage them
 HermitPurple:
   cooldown: 20
   vine_length: 4
   pull_strength: 1.3
   damage: 3.0
+
 # Can turn any block into a bomb
 KillerQueen:
+  #Makes blocks a bomb
   cooldown: 120
   explosion_power: 0.0  # I made it 0.0 because for some safety reasons if you want it to explode you can change it
   explosion_delay: 3
+  #Punch part
+  cooldown_punch: 5
+  damage: 1.5
+  hits: 3
+  knockback: 0.5
+
 # Can make it acidic rain in a spesific area
 NovemberRain:
   cooldown: 600
   radius: 10
   duration: 5
   damage: 2.0
+
 # Can throw really fast sword hits
 SilverChariot:
   cooldown: 5
   damage: 0.5
   hits: 7
   knockback: 0.2
+
 # Can throw his nails
 Tusk:
   cooldown: 15
   damage: 3.0
+
 # Can throw emerald
 HierophantGreen:
+  #Emerald Splash
   cooldown: 30
   damage: 1.0
   ammo_count: 3
+  #Punch part
+  cooldown_punch: 5
+  p_damage: 0.5
+  hits: 2
+  knockback: 0.3
+
 # Can open his enemies like a book and give them weakness
 HeavensDoor:
   cooldown: 120
   damage: 1.0
   duration: 30
+
+# Can shoots bullets that auto tracks entities
+SexyPistols:
+  cooldown: 10
+  damage: 2.0
+
+# Can shoot bubbles
+SoftAndWet:
+  #Bubble
+  cooldown: 120
+  damage: 5.0
+  #Punch part
+  p_cooldown: 15
+  p_damage: 0.5
+  hits: 2
+  knockback: 0.3

@@ -9,7 +9,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -61,15 +60,6 @@ public class StandItem implements Listener {
         if (isStandItem(item)) {
             event.getItemDrop().remove();
             event.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "Stand Disabled!"));
-        }
-    }
-
-    @EventHandler
-    public void onHandSwap(PlayerSwapHandItemsEvent event) {
-        ItemStack mainHandItem = event.getMainHandItem();
-        if (isStandItem(mainHandItem)) {
-            event.setCancelled(true);
-            event.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "You can't put the stand item other than your second hand!"));
         }
     }
     
