@@ -36,8 +36,8 @@ public class Plugin extends JavaPlugin {
         LOGGER.info("You expected a message, but it was me, DIO!");
         getCommand("sphelp").setExecutor(new HelpCommand());
         getCommand("stands").setExecutor(new StandsCommand());
-        getCommand("standp").setExecutor(new StandPCommand(this));
         File standFile = new File(getDataFolder(), "stands.yml");
+        getCommand("standp").setExecutor(new StandPCommand(this, standFile));
         getCommand("standpick").setExecutor(new StandPick(getConfig(), standFile));
         getCommand("standuse").setExecutor(new StandUse(standFile));
         getServer().getPluginManager().registerEvents(new StandItem(), this);
@@ -80,10 +80,10 @@ public class Plugin extends JavaPlugin {
             String remotePluginYml = fetchPluginYml(pluginYmlUrl);
             latestVersion = parseVersionFromPluginYml(remotePluginYml);
             if (latestVersion != null && !getDescription().getVersion().equals(latestVersion)) {
-              getLogger().log(Level.WARNING, "A new version of the plugin is available: {0}", latestVersion);
+              getLogger().log(Level.WARNING, "[Stands] A new version of the plugin is available: {0}", latestVersion);
             }
         } catch (Exception e) {
-            getLogger().log(Level.WARNING, "Failed to check for updates: {0}", e.getMessage());
+            getLogger().log(Level.WARNING, "[Stands] Failed to check for updates: {0}", e.getMessage());
         }
     }
 
