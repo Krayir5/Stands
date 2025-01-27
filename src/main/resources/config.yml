@@ -158,3 +158,9 @@ PurpleHaze:
   p_damage: 1.5
   p_hits: 3
   p_knockback: 0.5
+
+SpiceGirl:
+  punch_cooldown: 5
+  damage: 1.5
+  hits: 4
+  knockback: 0.6
