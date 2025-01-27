@@ -25,6 +25,8 @@ import com.krayir5.stands.listeners.PlayerJoinListener;
 import com.krayir5.stands.listeners.StandItem;
 import com.krayir5.stands.listeners.StandListener;
 import com.krayir5.stands.utils.Metrics;
+
+import de.tr7zw.changeme.nbtapi.NBT;
 @SuppressWarnings("")
 public class Plugin extends JavaPlugin {
     private static final Logger LOGGER = Logger.getLogger("Stands");
@@ -41,12 +43,18 @@ public class Plugin extends JavaPlugin {
         getCommand("standpick").setExecutor(new StandPick(getConfig(), standFile));
         getCommand("standuse").setExecutor(new StandUse(standFile));
         getServer().getPluginManager().registerEvents(new StandItem(), this);
+        getServer().getPluginManager().registerEvents(new StandsCommand(), this);
         getServer().getPluginManager().registerEvents(new StandListener(this, standFile), this);
         checkForUpdates();
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(getDescription().getVersion(), latestVersion), this);
         getServer().getPluginManager().registerEvents(new PlayerDeathListener(standFile), this);
         saveDefaultConfig();
         updateConfig();
+        if (!NBT.preloadApi()) {
+            LOGGER.log(Level.WARNING, "NBT-API wasn't initialized properly, disabling the plugin");
+            getPluginLoader().disablePlugin(this);
+            return;
+        }
         @SuppressWarnings("unused")
         Metrics metrics = new Metrics(this, 24363);
     }

@@ -2,13 +2,14 @@ Stands:                # Those are the only stands for now, so you can change th
   Common:
     - Hermit Purple
     - Silver Chariot
+    - Tusk
   Rare:
     - Magician Red
-    - Tusk
+    - November Rain
     - Crazy Diamond
     - Soft & Wet
   Epic:
-    - November Rain
+    - Purple Haze
     - Killer Queen
     - Hierophant Green
     - Sexy Pistols
@@ -144,3 +145,16 @@ SoftAndWet:
   p_damage: 0.5
   hits: 2
   knockback: 0.3
+
+# Can make it poisinous in an area
+PurpleHaze:
+  #Poison
+  cooldown: 5
+  radius: 5
+  duration: 5
+  amplifier: 0
+  #Punch part
+  p_cooldown: 5
+  p_damage: 1.5
+  p_hits: 3
+  p_knockback: 0.5

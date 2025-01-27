@@ -1,6 +1,6 @@
 name: stands
 main: com.krayir5.stands.Plugin
-version: 1.2
+version: 1.3
 api-version: 1.16
 description: Adds Stand powers form JoJo's Bizarre Adventure
 permission: standp.admin
@@ -13,17 +13,17 @@ permissions:
     default: op
 commands:
   sphelp:
-    description: Oyunculara yardım mesajı gösterir.
+    description: Shows all commands that usable.
     usage: /sphelp
   stands:
-    description: Stand komutları.
+    description: Shows stand powers.
     usage: /stands <stand adı>
   standp:
     description: Admin commands.
     usage: /standp
   standpick:
-    description: A.
+    description: Randomly picks your stand.
     usage: /standpick
   standuse:
-    description: B.
+    description: Gives you a item which you can use to use you stand abilities.
     usage: /standuse

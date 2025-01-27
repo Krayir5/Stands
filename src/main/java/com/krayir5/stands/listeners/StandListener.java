@@ -24,6 +24,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -75,9 +76,9 @@ public void starPlatinumP(Player player, Entity entity){
         FileConfiguration config = plugin.getConfig();
         UUID playerID = player.getUniqueId();
         LivingEntity target = (LivingEntity) entity;
-        double damage = config.getDouble("StarPlatinum.damage", 1.0);
-        int hits = config.getInt("StarPlatinum.hits", 5);
-        double knockbackStrength = config.getDouble("StarPlatinum.knockback", 0.3);
+        double damage = config.getDouble("StarPlatinum.damage", 1.5);
+        int hits = config.getInt("StarPlatinum.hits", 4);
+        double knockbackStrength = config.getDouble("StarPlatinum.knockback", 0.6);
         int cooldownTime = config.getInt("StarPlatinum.punch_cooldown", 5) * 1000;
        if (cooldown.isOnCooldown("StarPlatinumP", playerID)) {
             long remainingTime = cooldown.getRemainingTime("StarPlatinumP", playerID);
@@ -91,7 +92,7 @@ public void starPlatinumP(Player player, Entity entity){
                 target.damage(damage, player);
                 Vector direction = target.getLocation().toVector().subtract(player.getLocation().toVector()).normalize();
                 target.setVelocity(direction.multiply(knockbackStrength));
-            }, i * 5L);
+            }, i * 11L);
         }
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.LIGHT_PURPLE + player.getName() + "'s Stand: " + ChatColor.BOLD + "ORA ORA ORA ORA!"));
 }
@@ -190,9 +191,9 @@ public void theWorldP(Player player, Entity entity){
     LivingEntity target = (LivingEntity) entity;
     FileConfiguration config = plugin.getConfig();
     UUID playerID = player.getUniqueId();
-    double damage = config.getDouble("TheWorld.damage", 1.0);
-    int hits = config.getInt("TheWorld.hits", 5);
-    double knockbackStrength = config.getDouble("TheWorld.knockback", 0.3);
+    double damage = config.getDouble("TheWorld.damage", 1.5);
+    int hits = config.getInt("TheWorld.hits", 4);
+    double knockbackStrength = config.getDouble("TheWorld.knockback", 0.6);
     int cooldownTime = config.getInt("TheWorld.cooldown_punch", 5) * 1000;
     if (cooldown.isOnCooldown("TheWorldP", playerID)) {
         long remainingTime = cooldown.getRemainingTime("TheWorldP", playerID);
@@ -206,7 +207,7 @@ public void theWorldP(Player player, Entity entity){
             target.damage(damage, player);
             Vector direction = target.getLocation().toVector().subtract(player.getLocation().toVector()).normalize();
             target.setVelocity(direction.multiply(knockbackStrength));
-        }, i * 5L);
+        }, i * 11L);
     }
     player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.YELLOW + player.getName() + "'s Stand: " + ChatColor.BOLD + "MUDA MUDA MUDA MUDA!"));
 }
@@ -296,7 +297,7 @@ public void crazyDiamondP(Player player, Entity entity){
     int cooldownP = config.getInt("CrazyDiamond.punch_cooldown", 5) * 1000;
     int hits = config.getInt("CrazyDiamond.hits", 4);
     double knockbackStrength = config.getDouble("CrazyDiamond.knockback", 0.5);
-    double damage = config.getDouble("CrazyDiamond.damage", 5.0);
+    double damage = config.getDouble("CrazyDiamond.damage", 1.5);
 
         if (entity instanceof LivingEntity) {
             if (cooldown.isOnCooldown("CrazyDiamondP", playerID)) {
@@ -312,7 +313,7 @@ public void crazyDiamondP(Player player, Entity entity){
                     target.damage(damage, player);
                     Vector direction = target.getLocation().toVector().subtract(player.getLocation().toVector()).normalize();
                     target.setVelocity(direction.multiply(knockbackStrength));
-                }, i * 5L);
+                }, i * 11L);
             }
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.LIGHT_PURPLE + player.getName() + "'s Stand: " + ChatColor.BOLD + "DORARARARARA!"));
         }
@@ -374,7 +375,7 @@ public void magicianRedP(Player player, Entity entity){
             target.damage(damage, player);
             Vector direction = target.getLocation().toVector().subtract(player.getLocation().toVector()).normalize();
             target.setVelocity(direction.multiply(knockbackStrength));
-        }, i * 10L);
+        }, i * 20L);
     }
    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + player.getName() + "'s Stand: " + ChatColor.BOLD + "CACOWW!"));
 }
@@ -463,9 +464,9 @@ public void killerQueenP(Player player, Entity entity){
     FileConfiguration config = plugin.getConfig();
     UUID playerID = player.getUniqueId();
     LivingEntity target = (LivingEntity) entity;
-    double damage = config.getDouble("KillerQueen.damage", 1.0);
-    int hits = config.getInt("KillerQueen.hits", 5);
-    double knockbackStrength = config.getDouble("KillerQueen.knockback", 0.3);
+    double damage = config.getDouble("KillerQueen.damage", 1.5);
+    int hits = config.getInt("KillerQueen.hits", 3);
+    double knockbackStrength = config.getDouble("KillerQueen.knockback", 0.6);
     int cooldownTime = config.getInt("KillerQueen.cooldown_punch", 5) * 1000;
     if (cooldown.isOnCooldown("KillerQueenP", playerID)) {
         long remainingTime = cooldown.getRemainingTime("KillerQueenP", playerID);
@@ -479,7 +480,7 @@ public void killerQueenP(Player player, Entity entity){
             target.damage(damage, player);
             Vector direction = target.getLocation().toVector().subtract(player.getLocation().toVector()).normalize();
             target.setVelocity(direction.multiply(knockbackStrength));
-        }, i * 10L);
+        }, i * 20L);
     }
    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.LIGHT_PURPLE + player.getName() + "'s Stand: " + ChatColor.BOLD + "SHIBABABA!"));
 }
@@ -547,7 +548,7 @@ public void killerQueenBTD(Player player, Block block){
 public void novemberRain(Player player){
     FileConfiguration config = plugin.getConfig();
     UUID playerID = player.getUniqueId();
-    int radius = config.getInt("NovemberRain.radius", 10);
+    int radius = config.getInt("NovemberRain.radius", 6);
     int duration = config.getInt("NovemberRain.duration", 5) * 20;
     double damage = config.getDouble("NovemberRain.damage", 2.0);
 
@@ -585,9 +586,9 @@ public void silverChariotHR(Player player, Entity entity){
     FileConfiguration config = plugin.getConfig();
     UUID playerID = player.getUniqueId();
     LivingEntity target = (LivingEntity) entity;
-    double damage = config.getDouble("SilverChariot.damage", 1.0);
-    int hits = config.getInt("SilverChariot.hits", 5);
-    double knockbackStrength = config.getDouble("SilverChariot.knockback", 0.2);    
+    double damage = config.getDouble("SilverChariot.damage", 0.5);
+    int hits = config.getInt("SilverChariot.hits", 4);
+    double knockbackStrength = config.getDouble("SilverChariot.knockback", 0.4);    
     int cooldownTime = config.getInt("SilverChariot.cooldown", 5) * 1000;
 
     if (cooldown.isOnCooldown("SilverChariot", playerID)) {
@@ -605,7 +606,7 @@ public void silverChariotHR(Player player, Entity entity){
                 target.setVelocity(direction.multiply(knockbackStrength));
                 player.getWorld().spawnParticle(Particle.END_ROD, player.getLocation().add(0.5, 1, 0.5), 8, 0.3, 0.3, 0.3, 0.02);
                 target.getWorld().spawnParticle(Particle.CRIT, target.getLocation().add(0.5, 1, 0.5), 15, 0.3, 0.3, 0.3, 0.02);
-           }, i * 5L);
+           }, i * 11L);
         }
 }
 
@@ -648,7 +649,7 @@ public void hierophantGreenP(Player player, Entity entity){
             target.damage(damage, player);
             Vector direction = target.getLocation().toVector().subtract(player.getLocation().toVector()).normalize();
             target.setVelocity(direction.multiply(knockbackStrength));
-        }, i * 10L);
+        }, i * 25L);
     }
    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.GREEN + player.getName() + "'s Stand: " + ChatColor.BOLD + "Hierophant Green!"));
 }
@@ -805,7 +806,7 @@ public void softAndWetP(Player player, Entity entity){
             target.damage(damage, player);
             Vector direction = target.getLocation().toVector().subtract(player.getLocation().toVector()).normalize();
             target.setVelocity(direction.multiply(knockbackStrength));
-        }, i * 10L);
+        }, i * 25L);
     }
    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.BLUE + player.getName() + "'s Stand: " + ChatColor.BOLD + "ORA ORA ORA ORA!"));
 }
@@ -829,6 +830,94 @@ public void softAndWetBG(Player player){
     bubble.setMetadata("SoftAndWetB", new FixedMetadataValue(plugin, true));
 
     player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.LIGHT_PURPLE + "Soft & Wet " + ChatColor.BOLD + "Bubble Generation!"));
+}
+
+public void purpleHazeP(Player player, Entity entity){
+    FileConfiguration config = plugin.getConfig();
+    UUID playerID = player.getUniqueId();
+    LivingEntity target = (LivingEntity) entity;
+    double damage = config.getDouble("PurpleHaze.p_damage", 1.5);
+    int hits = config.getInt("PurpleHaze.p_hits", 3);
+    double knockbackStrength = config.getDouble("PurpleHaze.p_knockback", 0.5);
+    int cooldownTime = config.getInt("PurpleHaze.p_cooldown", 5) * 1000;
+    if (cooldown.isOnCooldown("PurpleHazeP", playerID)) {
+        long remainingTime = cooldown.getRemainingTime("PurpleHazeP", playerID);
+        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "Punch Throw is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " second."));
+        return;
+    }
+    cooldown.setCooldown("PurpleHazeP", playerID, cooldownTime);
+    for (int i = 0; i < hits; i++) {
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            if (target.isDead()) return;
+            target.damage(damage, player);
+            Vector direction = target.getLocation().toVector().subtract(player.getLocation().toVector()).normalize();
+            target.setVelocity(direction.multiply(knockbackStrength));
+        }, i * 20L);
+    }
+   player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.DARK_PURPLE + player.getName() + "'s Stand: " + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "ARU ARU ARU ARU!"));
+}
+
+public void purpleHazeKVI(Player player){
+    FileConfiguration config = plugin.getConfig();
+    UUID playerID = player.getUniqueId();
+    int radius = config.getInt("PurpleHaze.radius", 5);
+    int duration = config.getInt("PurpleHaze.duration", 5) * 20;
+    int amplifier = config.getInt("PurpleHaze.amplifier", 0);
+
+    int cooldownTime = config.getInt("PurpleHaze.cooldown", 5) * 1000;
+    if (cooldown.isOnCooldown("PurpleHazeKVI", playerID)) {
+        long remainingTime = cooldown.getRemainingTime("PurpleHazeKVI", playerID);
+        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "Killer Virus Infection is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " second."));
+        return;
+    }
+    cooldown.setCooldown("PurpleHazeKVI", playerID, cooldownTime);
+
+    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.DARK_PURPLE + "Purple Haze, " + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "UBASHAAA!"));
+    new BukkitRunnable() {
+        int ticksElapsed = 0;
+        @Override
+        public void run() {
+            if (ticksElapsed >= duration) {
+                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.DARK_PURPLE + "Purple Haze, " + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "Killer Virus Infection ended!"));
+                cancel();
+                return;
+            }
+            player.getWorld().spawnParticle(Particle.SNEEZE, player.getLocation(), 500, radius, radius, radius, 0.1);
+            for (Entity entity : player.getNearbyEntities(radius, radius, radius)) {
+                if (entity instanceof LivingEntity) {
+                    LivingEntity target = (LivingEntity) entity;
+                    target.removePotionEffect(PotionEffectType.POISON);
+                    target.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 100, amplifier));
+                }
+            }
+            ticksElapsed += 20;
+        }
+    }.runTaskTimer(plugin, 0L, 20L);
+}
+
+public void spiceGirlP(Player player, Entity entity){
+    FileConfiguration config = plugin.getConfig();
+    UUID playerID = player.getUniqueId();
+    LivingEntity target = (LivingEntity) entity;
+    double damage = config.getDouble("SpiceGirl.damage", 1.5);
+    int hits = config.getInt("SpiceGirl.hits", 4);
+    double knockbackStrength = config.getDouble("SpiceGirl.knockback", 0.6);
+    int cooldownTime = config.getInt("SpiceGirl.punch_cooldown", 5) * 1000;
+   if (cooldown.isOnCooldown("SpiceGirlP", playerID)) {
+        long remainingTime = cooldown.getRemainingTime("SpiceGirlP", playerID);
+        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "Punch Throw is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " second."));
+        return;
+    }
+    cooldown.setCooldown("SpiceGirlP", playerID, cooldownTime);
+    for (int i = 0; i < hits; i++) {
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            if (target.isDead()) return;
+            target.damage(damage, player);
+            Vector direction = target.getLocation().toVector().subtract(player.getLocation().toVector()).normalize();
+            target.setVelocity(direction.multiply(knockbackStrength));
+        }, i * 11L);
+    }
+    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.LIGHT_PURPLE + player.getName() + "'s Stand: " + ChatColor.BOLD + "WAAAANNABEEEE!"));
 }
 
 @EventHandler
@@ -884,6 +973,14 @@ public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
 
             case "Soft & Wet":
                 softAndWetP(player, entity);
+                break;
+
+            case "Purple Haze":
+                purpleHazeP(player, entity);
+                break;
+
+            case "Spice Girl":
+                spiceGirlP(player, entity);
                 break;
 
             default:
@@ -947,6 +1044,11 @@ public void onHandSwap(PlayerSwapHandItemsEvent event) {
             case "Soft & Wet":
                 softAndWetBG(player);
                 break;
+
+            case "Purple Haze":
+                purpleHazeKVI(player);
+                break;
+
             default:
                 break;
         }
@@ -958,7 +1060,6 @@ public void onPlayerInteract(PlayerInteractEvent event) {
     Player player = event.getPlayer();
     ItemStack itemIn2Hand = player.getInventory().getItemInOffHand();
     String stand = getPlayerStand(player);
-    Block block = event.getClickedBlock();
     if (event.getHand() != EquipmentSlot.OFF_HAND) {
         return;
     }
@@ -972,14 +1073,37 @@ public void onPlayerInteract(PlayerInteractEvent event) {
                        starPlatinumSF(player);
                  }
                 break;
+
             case "The World":
                 if (player.isSneaking()){
                     theWorldKT(player);
                 }
                 break;
+
+            default:
+                break;
+         }
+    }
+}
+
+@EventHandler
+public void onBlockInteract(PlayerInteractEvent event) {
+    Player player = event.getPlayer();
+    ItemStack itemIn2Hand = player.getInventory().getItemInOffHand();
+    String stand = getPlayerStand(player);
+    Block block = event.getClickedBlock();
+    if (event.getHand() != EquipmentSlot.OFF_HAND) {
+        return;
+    }
+    if (isStandItem(itemIn2Hand)){
+        if (stand == null) {
+            return;
+        }
+        switch (stand) {
             case "Killer Queen":
                  killerQueenBTD(player, block);
                 break;
+            
             default:
                 break;
          }
@@ -1049,6 +1173,17 @@ public void onPlayerInteract(PlayerInteractEvent event) {
             if (event.getHitEntity() instanceof LivingEntity) {
                 LivingEntity target = (LivingEntity) event.getHitEntity();
                 target.damage(damage, player);
+            }
+        }
+    }
+    
+    @EventHandler
+    public void damage(EntityDamageEvent event) {
+        if (event.getCause() == EntityDamageEvent.DamageCause.FALL && event.getEntity() instanceof Player) {
+            Player player = (Player) event.getEntity();
+            String stand = getPlayerStand(player);
+            if(stand.equalsIgnoreCase("Spice Girl")){
+                event.setCancelled(true);
             }
         }
     }
