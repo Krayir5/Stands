@@ -25,7 +25,7 @@ public class StandsCommand implements Listener, CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage("Bu komut yalnızca oyuncular tarafından kullanılabilir.");
+            sender.sendMessage("This command is usable for only players.");
             return true;
         }
         Player player = (Player) sender;
