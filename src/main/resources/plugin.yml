@@ -17,7 +17,7 @@ commands:
     usage: /sphelp
   stands:
     description: Shows stand powers.
-    usage: /stands <stand adı>
+    usage: /stands
   standp:
     description: Admin commands.
     usage: /standp
