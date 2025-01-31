@@ -10,3 +10,5 @@ A plugin that adds Stand abilities from JoJo's Bizarre Adventure. You can use th
 
 -PERMISSIONS-
 1. standp.admin The person that has this permission can use /standp command
+
+You can also download the plugin in [Spigot](https://www.spigotmc.org/resources/stands-from-jjba.121947/)
