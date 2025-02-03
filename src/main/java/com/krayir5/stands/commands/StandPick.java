@@ -2,6 +2,7 @@ package com.krayir5.stands.commands;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
-@SuppressWarnings("")
 public class StandPick implements CommandExecutor {
 
     private final FileConfiguration config;
@@ -28,14 +28,14 @@ public class StandPick implements CommandExecutor {
         this.config = config;
         this.standFile = standFile;
         this.standConfig = YamlConfiguration.loadConfiguration(standFile);
-        createStandFileIfNotExists();
+        standFileC();
     }
 
-    private void createStandFileIfNotExists() {
+    private void standFileC() {
         try {
             if (!standFile.exists()) {
                 standFile.createNewFile();
-                Bukkit.getLogger().info("stands.yml file crated successfully.");
+                Bukkit.getLogger().info("stands.yml file created successfully.");
             }
         } catch (IOException e) {
             Bukkit.getLogger().severe(String.format("stands.yml couldn't crated: %s", e.getMessage()));
@@ -44,24 +44,41 @@ public class StandPick implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if(sender == null)return true;
         if (!(sender instanceof Player)) {
             sender.sendMessage(ChatColor.RED + "Only players could use this command!");
             return true;
         }
-
+        if (!standFile.exists()) {
+            standFileC();
+        }
+        try {
+            standConfig.load(standFile);
+        } catch (IOException | org.bukkit.configuration.InvalidConfigurationException e) {
+            sender.sendMessage(ChatColor.RED + "Failed to load stand data.");
+            Bukkit.getLogger().severe(String.format("stands.yml couldn't be loaded: %s", e.getMessage()));
+            return true;
+        }
         Player player = (Player) sender;
         UUID playerId = player.getUniqueId();
-
-        if (standConfig.contains(playerId.toString())) {
-            String stand = standConfig.getString(playerId.toString());
+        String playerPath = "players." + playerId;
+        if (standConfig.contains(playerPath + ".stand")){
+            String stand = standConfig.getString(playerPath + ".stand");
             player.sendMessage(ChatColor.RED + "You've already picked a stand: " + ChatColor.GOLD + stand);
             return true;
         }
-
         String stand = getRandomStand();
-        standConfig.set(playerId.toString(), stand);
-        saveStandConfig();
-
+        standConfig.set(playerPath + ".stand", stand);
+        standConfig.set(playerPath + ".standLog", new ArrayList<>());
+        standConfig.set(playerPath + ".standXP.Stand.XP", 0);
+        standConfig.set(playerPath + ".standXP.Stand.Level", 0);
+        standConfig.set(playerPath + ".standXP.Ability1.XP", 0);
+        standConfig.set(playerPath + ".standXP.Ability1.Level", 1);
+        standConfig.set(playerPath + ".standXP.Ability2.XP", 0);
+        standConfig.set(playerPath + ".standXP.Ability2.Level", 0);
+        standConfig.set(playerPath + ".standXP.Ability3.XP", 0);
+        standConfig.set(playerPath + ".standXP.Ability3.Level", 0);
+        saveSC();
         player.sendMessage(ChatColor.GREEN + "Stand Arrow touched you and now your stand is: " + ChatColor.GOLD + stand);
         return true;
     }
@@ -73,27 +90,21 @@ public class StandPick implements CommandExecutor {
         rarityMap.put("Epic", config.getStringList("Stands.Epic"));
         rarityMap.put("Legendary", config.getStringList("Stands.Legendary"));
 
-        int randomChance = new Random().nextInt(100) + 1;
+        int chance = new Random().nextInt(100) + 1;
+        List<String> targetList;
 
-        if (randomChance <= 50) {
-            return getRandomFromList(rarityMap.get("Common"));
-        } else if (randomChance <= 80) {
-            return getRandomFromList(rarityMap.get("Rare"));
-        } else if (randomChance <= 95) {
-            return getRandomFromList(rarityMap.get("Epic"));
-        } else {
-            return getRandomFromList(rarityMap.get("Legendary"));
-        }
+        if (chance <= 50) targetList = rarityMap.get("Common");
+        else if (chance <= 80) targetList = rarityMap.get("Rare");
+        else if (chance <= 95) targetList = rarityMap.get("Epic");
+        else targetList = rarityMap.get("Legendary");
+        return targetList.isEmpty() ? "Unknown Stand" : 
+             targetList.get(new Random().nextInt(targetList.size()));
     }
 
-    private String getRandomFromList(List<String> list) {
-        return list.get(new Random().nextInt(list.size()));
-    }
-
-    private void saveStandConfig() {
+    private void saveSC() {
         try {
             standConfig.save(standFile);
-        } catch (IOException e) {
+        }catch (IOException e) {
             Bukkit.getLogger().severe(String.format("stands.yml couldn't saved: %s", e.getMessage()));
         }
     }

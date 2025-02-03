@@ -17,16 +17,16 @@ public class StandUse implements CommandExecutor {
 
     private final File standFile;
 
+    public StandUse(File standFile) {
+        this.standFile = standFile;
+    }
+
     private boolean isStandItem(ItemStack item) {
         if (item == null || item.getType() != Material.NETHER_STAR) {
             return false;
         }
         ItemMeta meta = item.getItemMeta();
         return meta != null && meta.hasCustomModelData() && meta.getCustomModelData() == 1453;
-    }
-
-    public StandUse(File standFile) {
-        this.standFile = standFile;
     }
 
     private ItemStack createStandItem(String stand) {
@@ -51,7 +51,7 @@ public class StandUse implements CommandExecutor {
         UUID playerId = player.getUniqueId();
 
         YamlConfiguration standConfig = YamlConfiguration.loadConfiguration(standFile);
-        String stand = standConfig.getString(playerId.toString());
+        String stand = standConfig.getString("players." + playerId + ".stand");
 
         if (stand == null) {
             player.sendMessage(ChatColor.RED + "You need to have a stand first! For that you can use /standpick command.");

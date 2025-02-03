@@ -18,22 +18,29 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.krayir5.stands.commands.HelpCommand;
 import com.krayir5.stands.commands.StandPCommand;
 import com.krayir5.stands.commands.StandPick;
+import com.krayir5.stands.commands.StandUpgrade;
 import com.krayir5.stands.commands.StandUse;
 import com.krayir5.stands.commands.StandsCommand;
 import com.krayir5.stands.listeners.PlayerDeathListener;
 import com.krayir5.stands.listeners.PlayerJoinListener;
 import com.krayir5.stands.listeners.StandItem;
 import com.krayir5.stands.listeners.StandListener;
+import com.krayir5.stands.utils.GUIM.MenuL;
 import com.krayir5.stands.utils.Metrics;
 
 import de.tr7zw.changeme.nbtapi.NBT;
 @SuppressWarnings("")
 public class Plugin extends JavaPlugin {
+    private static Plugin instance;
+    public static Plugin inst() {
+        return instance;
+    }
     private static final Logger LOGGER = Logger.getLogger("Stands");
     private String latestVersion;
 
     @Override
     public void onEnable() {
+        instance = this;
         if (!getDataFolder().exists()) {getDataFolder().mkdirs();}
         LOGGER.info("You expected a message, but it was me, DIO!");
         getCommand("sphelp").setExecutor(new HelpCommand());
@@ -42,7 +49,9 @@ public class Plugin extends JavaPlugin {
         getCommand("standp").setExecutor(new StandPCommand(this, standFile));
         getCommand("standpick").setExecutor(new StandPick(getConfig(), standFile));
         getCommand("standuse").setExecutor(new StandUse(standFile));
+        getCommand("standupgrade").setExecutor(new StandUpgrade(standFile));
         getServer().getPluginManager().registerEvents(new StandItem(), this);
+        getServer().getPluginManager().registerEvents(new MenuL(), this);
         getServer().getPluginManager().registerEvents(new StandsCommand(), this);
         getServer().getPluginManager().registerEvents(new StandListener(this, standFile), this);
         checkForUpdates();
