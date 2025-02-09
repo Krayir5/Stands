@@ -71,7 +71,7 @@ public class StandPick implements CommandExecutor {
         standConfig.set(playerPath + ".stand", stand);
         standConfig.set(playerPath + ".standLog", new ArrayList<>());
         standConfig.set(playerPath + ".standXP.Stand.XP", 0);
-        standConfig.set(playerPath + ".standXP.Stand.Level", 0);
+        standConfig.set(playerPath + ".standXP.Stand.Level", 1);
         standConfig.set(playerPath + ".standXP.Ability1.XP", 0);
         standConfig.set(playerPath + ".standXP.Ability1.Level", 1);
         standConfig.set(playerPath + ".standXP.Ability2.XP", 0);
