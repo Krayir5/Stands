@@ -19,7 +19,7 @@ import com.krayir5.stands.utils.GUIM.Button;
 import com.krayir5.stands.utils.GUIM.ItemC;
 import com.krayir5.stands.utils.GUIM.Menu;
 import com.krayir5.stands.utils.HeadCreator;
-
+@SuppressWarnings("")
 public class StandUMenu extends Menu {
 
     private final Player player;
@@ -242,7 +242,7 @@ public class StandUMenu extends Menu {
     
         if (currentXP < rXP) {
             int xpNeeded = rXP - currentXP;
-            player.sendMessage("§cInsufficient XP! At least " + xpNeeded + " XP required to upgrade " + abilityName + ".");
+            player.sendMessage("§cInsufficient XP! At least §e" + xpNeeded + " XP §crequired to upgrade " + abilityName + ".");
             return;
         }
     

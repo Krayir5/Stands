@@ -6,8 +6,8 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.krayir5</groupId>
-	<artifactId>stands</artifactId>
-	<version>1.4</version>
+	<artifactId>Stands</artifactId>
+	<version>1.4.1</version>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -16,7 +16,6 @@
 	</properties>
 
 	<repositories>
-		<!-- This adds the Spigot Maven repository to the build -->
 		<repository>
 			<id>spigot-repo</id>
 			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
@@ -35,7 +34,6 @@
 			<version>4.11</version>
 			<scope>test</scope>
 		</dependency>
-		<!--This adds the Spigot API artifact to the build -->
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>

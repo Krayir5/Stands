@@ -2,6 +2,7 @@ package com.krayir5.stands.listeners;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -15,6 +16,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameRule;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -28,6 +30,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
@@ -42,6 +45,8 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -57,13 +62,17 @@ public class StandListener implements Listener {
 
     private final Plugin plugin;
     private final File standFile;
+    private final FileConfiguration config;
+    private final FileConfiguration standConfig;
     private final Cooldown cooldown = new Cooldown();
     private final Map<UUID, Integer> bulletsMap = new HashMap<>();
     private final Set<UUID> rP = new HashSet<>();
 
-    public StandListener(Plugin plugin, File standFile) {
+    public StandListener(FileConfiguration config, Plugin plugin, File standFile) {
+        this.config = config;
         this.plugin = plugin;
         this.standFile = standFile;
+        this.standConfig = YamlConfiguration.loadConfiguration(standFile);
     }
 
     private boolean isStandItem(ItemStack item) {
@@ -106,6 +115,27 @@ public class StandListener implements Listener {
         }
     }
 
+    public static void rx7FD(long seconds, Player p, String aN) {
+        long minute = 60;
+        long hour = 60 * minute;
+        long day = 24 * hour;
+
+        long days = seconds / day;
+        seconds %= day;
+        long hours = seconds / hour;
+        seconds %= hour;
+        long minutes = seconds / minute;
+        seconds %= minute;
+
+        StringBuilder result = new StringBuilder();
+        if (days > 1) result.append(days).append(" days ");else if (days == 1) result.append(days).append(" day ");
+        if (hours > 1) result.append(hours).append(" hours ");else if (hours == 1) result.append(hours).append(" hour ");
+        if (minutes > 1) result.append(minutes).append(" minutes ");else if (minutes == 1) result.append(minutes).append(" minute ");
+        if (seconds > 1 || result.length() == 0) result.append(seconds).append(" seconds");else if (seconds == 1) result.append(seconds).append(" second");
+    
+        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + aN + " is on cooldown! You need to wait " + ChatColor.GRAY + result.toString().trim()));
+    }    
+
 public void starPlatinumP(Player player, UUID playerID, Entity entity, FileConfiguration config){
         LivingEntity target = (LivingEntity) entity;
         int level = sileighty(1, playerID);
@@ -115,7 +145,7 @@ public void starPlatinumP(Player player, UUID playerID, Entity entity, FileConfi
         int cooldownTime = config.getInt("StarPlatinum.punch_cooldown", 15) * 1000;
         if (cooldown.isOnCooldown("StarPlatinumP", playerID)) {
             long remainingTime = cooldown.getRemainingTime("StarPlatinumP", playerID);
-            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "Punch Throw is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " second."));
+            rx7FD(remainingTime, player, "Punch Throw");
             return;
         }
         cooldown.setCooldown("StarPlatinumP", playerID, cooldownTime);
@@ -228,7 +258,7 @@ public void theWorldP(Player player, UUID playerID, Entity entity, FileConfigura
     double damage = config.getDouble("TheWorld.damage", 1.5) * level;
     int hits = config.getInt("TheWorld.hits", 4);
     double knockbackStrength = config.getDouble("TheWorld.knockback", 0.6);
-    int cooldownTime = config.getInt("TheWorld.cooldown_punch", 15) * 1000;
+    int cooldownTime = config.getInt("TheWorld.punch_cooldown", 15) * 1000;
     if (cooldown.isOnCooldown("TheWorldP", playerID)) {
         long remainingTime = cooldown.getRemainingTime("TheWorldP", playerID);
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "Punch Throw is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " second."));
@@ -1293,7 +1323,6 @@ public void diverDownP(Player player, UUID playerID, Entity entity, FileConfigur
 
 @EventHandler
 public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
-    FileConfiguration config = plugin.getConfig();
     Player player = event.getPlayer();
     UUID playerID = player.getUniqueId();
     Entity entity = event.getRightClicked();
@@ -1385,7 +1414,6 @@ public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
 
 @EventHandler
 public void onHandSwap(PlayerSwapHandItemsEvent event) {
-    FileConfiguration config = plugin.getConfig();
     Player player = event.getPlayer();
     UUID playerID = player.getUniqueId();
     ItemStack itemIn2Hand = event.getMainHandItem();
@@ -1493,7 +1521,6 @@ public void onHandSwap(PlayerSwapHandItemsEvent event) {
 
 @EventHandler
 public void onPlayerInteract(PlayerInteractEvent event) {
-    FileConfiguration config = plugin.getConfig();
     Player player = event.getPlayer();
     UUID playerID = player.getUniqueId();
     ItemStack itemIn2Hand = player.getInventory().getItemInOffHand();
@@ -1531,7 +1558,6 @@ public void onPlayerInteract(PlayerInteractEvent event) {
 
 @EventHandler
 public void onBlockInteract(PlayerInteractEvent event) {
-    FileConfiguration config = plugin.getConfig();
     Player player = event.getPlayer();
     UUID playerID = player.getUniqueId();
     ItemStack itemIn2Hand = player.getInventory().getItemInOffHand();
@@ -1558,7 +1584,6 @@ public void onBlockInteract(PlayerInteractEvent event) {
 
     @EventHandler
     public void onProjectileHit(ProjectileHitEvent event) {
-        FileConfiguration config = plugin.getConfig();
         if (!(event.getEntity() instanceof Snowball))return;
         Snowball standSB = (Snowball) event.getEntity();
         if(!(standSB.getShooter() instanceof Player))return;
@@ -1728,4 +1753,90 @@ public void onBlockInteract(PlayerInteractEvent event) {
             if(stand.equalsIgnoreCase("Made in Heaven"))player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1 + level, false, false));
         }, 10L);
     }
+    @EventHandler
+    public void onRightClick(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        ItemStack item = player.getInventory().getItemInMainHand();
+
+        if (item.getType() != Material.ARROW || !item.hasItemMeta()) return;
+        ItemMeta meta = item.getItemMeta();
+        PersistentDataContainer data = meta.getPersistentDataContainer();
+        NamespacedKey key = new NamespacedKey(plugin, "stand_arrow");
+        if (event.getHand() != EquipmentSlot.HAND) return;
+        if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (data.has(key, PersistentDataType.STRING) && 
+            data.get(key, PersistentDataType.STRING).equals("s_arrow")) {
+                if (!standFile.exists()) {
+                    standFileC();
+                }
+                try {
+                    standConfig.load(standFile);
+                } catch (IOException | org.bukkit.configuration.InvalidConfigurationException e) {
+                    player.sendMessage(ChatColor.RED + "Failed to load stand data.");
+                    Bukkit.getLogger().severe(String.format("stands.yml couldn't be loaded: %s", e.getMessage()));
+                }
+                UUID playerId = player.getUniqueId();
+                String playerPath = "players." + playerId;
+                if (standConfig.contains(playerPath + ".stand")){
+                    String stand = standConfig.getString(playerPath + ".stand");
+                    player.sendMessage(ChatColor.RED + "You've already picked a stand: " + ChatColor.GOLD + stand);
+                }else{
+                    String stand = getRandomStand();
+                    standConfig.set(playerPath + ".stand", stand);
+                    standConfig.set(playerPath + ".standLog", new ArrayList<>());
+                    standConfig.set(playerPath + ".standXP.Stand.XP", 0);
+                    standConfig.set(playerPath + ".standXP.Stand.Level", 1);
+                    standConfig.set(playerPath + ".standXP.Ability1.XP", 0);
+                    standConfig.set(playerPath + ".standXP.Ability1.Level", 1);
+                    standConfig.set(playerPath + ".standXP.Ability2.XP", 0);
+                    standConfig.set(playerPath + ".standXP.Ability2.Level", 0);
+                    standConfig.set(playerPath + ".standXP.Ability3.XP", 0);
+                    standConfig.set(playerPath + ".standXP.Ability3.Level", 0);
+                    saveSC();
+                    player.sendMessage(ChatColor.GREEN + "Stand Arrow touched you and now your stand is: " + ChatColor.GOLD + stand);
+    
+                    if (item.getAmount() > 1) {
+                        item.setAmount(item.getAmount() - 1);
+                    } else {
+                        player.getInventory().removeItem(item);
+                    }
+                }
+            }
+        }
+        private void standFileC() {
+            try {
+                if (!standFile.exists()) {
+                    standFile.createNewFile();
+                    Bukkit.getLogger().info("stands.yml file created successfully.");
+                }
+            } catch (IOException e) {
+                Bukkit.getLogger().severe(String.format("stands.yml couldn't crated: %s", e.getMessage()));
+            }
+        }
+
+        private String getRandomStand() {
+            Map<String, List<String>> rarityMap = new HashMap<>();
+            rarityMap.put("Common", config.getStringList("Stands.Common"));
+            rarityMap.put("Rare", config.getStringList("Stands.Rare"));
+            rarityMap.put("Epic", config.getStringList("Stands.Epic"));
+            rarityMap.put("Legendary", config.getStringList("Stands.Legendary"));
+
+            int chance = new Random().nextInt(100) + 1;
+            List<String> targetList;
+
+            if (chance <= 50) targetList = rarityMap.get("Common");
+            else if (chance <= 80) targetList = rarityMap.get("Rare");
+            else if (chance <= 95) targetList = rarityMap.get("Epic");
+            else targetList = rarityMap.get("Legendary");
+            return targetList.isEmpty() ? "Unknown Stand" : 
+                targetList.get(new Random().nextInt(targetList.size()));
+        }
+
+        private void saveSC() {
+            try {
+                standConfig.save(standFile);
+            }catch (IOException e) {
+                Bukkit.getLogger().severe(String.format("stands.yml couldn't saved: %s", e.getMessage()));
+            }
+        }
 }

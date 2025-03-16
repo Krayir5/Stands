@@ -8,19 +8,23 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.krayir5.stands.commands.HelpCommand;
-import com.krayir5.stands.commands.StandPCommand;
-import com.krayir5.stands.commands.StandPick;
-import com.krayir5.stands.commands.StandUpgrade;
-import com.krayir5.stands.commands.StandUse;
-import com.krayir5.stands.commands.StandsCommand;
+import com.krayir5.stands.commands.StandCommand;
 import com.krayir5.stands.listeners.PlayerDeathListener;
 import com.krayir5.stands.listeners.PlayerJoinListener;
 import com.krayir5.stands.listeners.StandItem;
@@ -43,20 +47,16 @@ public class Plugin extends JavaPlugin {
         instance = this;
         if (!getDataFolder().exists()) {getDataFolder().mkdirs();}
         LOGGER.info("You expected a message, but it was me, DIO!");
-        getCommand("sphelp").setExecutor(new HelpCommand());
-        getCommand("stands").setExecutor(new StandsCommand());
         File standFile = new File(getDataFolder(), "stands.yml");
-        getCommand("standp").setExecutor(new StandPCommand(this, standFile));
-        getCommand("standpick").setExecutor(new StandPick(getConfig(), standFile));
-        getCommand("standuse").setExecutor(new StandUse(standFile));
-        getCommand("standupgrade").setExecutor(new StandUpgrade(standFile));
+        getCommand("stand").setExecutor(new StandCommand(this, standFile));
+        getCommand("stand").setTabCompleter(new StandCommand(this, standFile));
         getServer().getPluginManager().registerEvents(new StandItem(), this);
         getServer().getPluginManager().registerEvents(new MenuL(), this);
-        getServer().getPluginManager().registerEvents(new StandsCommand(), this);
-        getServer().getPluginManager().registerEvents(new StandListener(this, standFile), this);
+        getServer().getPluginManager().registerEvents(new StandListener(getConfig(), this, standFile), this);
         checkForUpdates();
-        getServer().getPluginManager().registerEvents(new PlayerJoinListener(getDescription().getVersion(), latestVersion), this);
+        getServer().getPluginManager().registerEvents(new PlayerJoinListener(getDescription().getVersion(), latestVersion, standFile), this);
         getServer().getPluginManager().registerEvents(new PlayerDeathListener(standFile), this);
+        sAR();
         saveDefaultConfig();
         updateConfig();
         if (!NBT.preloadApi()) {
@@ -90,6 +90,31 @@ public class Plugin extends JavaPlugin {
             LOGGER.log(Level.SEVERE, "Failed to update config file: {0}", e.getMessage());
         }
     }
+
+    public void sAR() {
+        ItemStack sA = sAC();
+        NamespacedKey key = new NamespacedKey(this, "stand_arrow");
+        ShapedRecipe r = new ShapedRecipe(key, sA);
+        r.shape(" 21", " 32", "3  ");
+        r.setIngredient('1', Material.NETHERITE_INGOT);
+        r.setIngredient('2', Material.GOLD_INGOT);
+        r.setIngredient('3', Material.STICK);
+        Bukkit.addRecipe(r);
+    }
+
+    public ItemStack sAC() {
+        ItemStack arrow = new ItemStack(Material.ARROW);
+        ItemMeta meta = arrow.getItemMeta();
+        meta.setDisplayName("§6Stand Arrow");
+        meta.setLore(Collections.singletonList("§7Right clicking will give you a stand!"));
+        meta.setCustomModelData(1071);
+        PersistentDataContainer data = meta.getPersistentDataContainer();
+        NamespacedKey key = new NamespacedKey(this, "stand_arrow");
+        data.set(key, PersistentDataType.STRING, "s_arrow");
+        arrow.setItemMeta(meta);
+        return arrow;
+    }
+
 
     private void checkForUpdates() {
         try {
