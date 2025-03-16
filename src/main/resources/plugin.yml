@@ -15,18 +15,3 @@ commands:
   stand:
     description: THE command.
     usage: /stand <subcommand>
-  stands:
-    description: Shows stand powers.
-    usage: /stands
-  standp:
-    description: Admin commands.
-    usage: /standp
-  standpick:
-    description: Randomly picks your stand.
-    usage: /standpick
-  standuse:
-    description: Gives you a item which you can use to use you stand abilities.
-    usage: /standuse
-  standupgrade:
-    description: Stand Upgrade Menu.
-    usage: /standupgrade
