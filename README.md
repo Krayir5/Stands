@@ -3,7 +3,9 @@ A plugin that adds Stand abilities from JoJo's Bizarre Adventure. You can use th
 
 ## How to get a Stand?
 To get a stand, you need to craft a stand arrow like this:
+
 ![image](https://github.com/user-attachments/assets/ac11e9fb-6684-4d37-8cea-3065c5d677c6)
+
 Then while the arrow is on your main hand right clicking will give you a random stand!(If you have a stand this will not work.)
 
 
