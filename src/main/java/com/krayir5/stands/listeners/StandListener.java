@@ -42,6 +42,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -169,13 +170,13 @@ public void starPlatinumTS(Player player, UUID playerID, FileConfiguration confi
     
     if (cooldown.isOnCooldown("StarPlatinumTS", playerID)) {
         long remainingTime = cooldown.getRemainingTime("StarPlatinumTS", playerID);
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "Time Stop is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " second."));
+        rx7FD(remainingTime, player, "Time Stop");
         return;
-        }
-        cooldown.setCooldown("StarPlatinumTS", playerID, cooldownTime);
-        Set<Player> affectedPlayers = new HashSet<>();
-        Bukkit.getOnlinePlayers().forEach(p -> {
-            if (!p.equals(player)) {
+    }
+    cooldown.setCooldown("StarPlatinumTS", playerID, cooldownTime);
+    Set<Player> affectedPlayers = new HashSet<>();
+    Bukkit.getOnlinePlayers().forEach(p -> {
+        if (!p.equals(player)) {
                 p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, duration, 128, false, false));
                 p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, duration, 128, false, false));
                 p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, duration, 128, false, false));
@@ -225,7 +226,7 @@ public void starPlatinumSF(Player player, UUID playerID, FileConfiguration confi
     double range = config.getDouble("StarPlatinum.sf_range", 10.0) * level;
         if (cooldown.isOnCooldown("StarPlatinumF", playerID)) {
             long remainingTime = cooldown.getRemainingTime("StarPlatinumF", playerID);
-            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "Star Finger is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " second."));
+            rx7FD(remainingTime, player, "Star Finger");
             return;
         }
         cooldown.setCooldown("StarPlatinumF", playerID, cooldownTime);
@@ -261,7 +262,7 @@ public void theWorldP(Player player, UUID playerID, Entity entity, FileConfigura
     int cooldownTime = config.getInt("TheWorld.punch_cooldown", 15) * 1000;
     if (cooldown.isOnCooldown("TheWorldP", playerID)) {
         long remainingTime = cooldown.getRemainingTime("TheWorldP", playerID);
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "Punch Throw is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " second."));
+        rx7FD(remainingTime, player, "Punch Throw");
         return;
     }
     cooldown.setCooldown("TheWorldP", playerID, cooldownTime);
@@ -285,7 +286,7 @@ public void theWorldTS(Player player, UUID playerID, FileConfiguration config){
 
     if (cooldown.isOnCooldown("TheWorldTS", playerID)) {
         long remainingTime = cooldown.getRemainingTime("TheWorldTS", playerID);
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "Time Stop is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " second."));
+        rx7FD(remainingTime, player, "Time Stop");        
         return;
     }
     cooldown.setCooldown("TheWorldTS", playerID, cooldownTime);
@@ -347,7 +348,7 @@ public void theWorldKT(Player player, UUID playerID, FileConfiguration config){
     int kC = config.getInt("TheWorld.knifeCount", 3) + aL;
         if (cooldown.isOnCooldown("TheWorldK", playerID)) {
             long remainingTime = cooldown.getRemainingTime("TheWorldK", playerID);
-            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "Knife Throw is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " second."));
+            rx7FD(remainingTime, player, "Knife Throw");
             return;
         }
         cooldown.setCooldown("TheWorldK", playerID, cT);
@@ -373,7 +374,7 @@ public void crazyDiamondP(Player player, UUID playerID, Entity entity, FileConfi
         if (entity instanceof LivingEntity) {
             if (cooldown.isOnCooldown("CrazyDiamondP", playerID)) {
                 long remainingTime = cooldown.getRemainingTime("CrazyDiamondP", playerID);
-                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "Punch Throw is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " second."));
+                rx7FD(remainingTime, player, "Punch Throw");
                 return;
             }
             cooldown.setCooldown("CrazyDiamondP", playerID, cooldownP);
@@ -405,7 +406,7 @@ public void crazyDiamondHeal(Player player, UUID playerID, Entity entity, FileCo
         if (entity instanceof LivingEntity) {
             if (cooldown.isOnCooldown("CrazyDiamondH", playerID)) {
                 long remainingTime = cooldown.getRemainingTime("CrazyDiamondH", playerID);
-                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "Crazy Diamond is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " second."));
+                rx7FD(remainingTime, player, "Healing");
                 return;
             }
             cooldown.setCooldown("CrazyDiamondH", playerID, cooldownH);
@@ -429,7 +430,7 @@ public void crazyDiamondSH(Player player, UUID playerID, FileConfiguration confi
     int amplifier = config.getInt("CrazyDiamond.amplifier", 0) + aL;
     if (cooldown.isOnCooldown("CrazyDiamond", playerID)) {
             long remainingTime = cooldown.getRemainingTime("CrazyDiamond", playerID);
-            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "Crazy Diamond is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " second."));
+            rx7FD(remainingTime, player, "Selfheal");
             return;
         }
     cooldown.setCooldown("CrazyDiamond", playerID, cooldownTime);
@@ -447,7 +448,7 @@ public void magicianRedP(Player player, UUID playerID, Entity entity, FileConfig
     int cooldownTime = config.getInt("MagicianRed.cooldown_punch", 15) * 1000;
     if (cooldown.isOnCooldown("MagicianRedP", playerID)) {
         long remainingTime = cooldown.getRemainingTime("MagicianRedP", playerID);
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "Punch Throw is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " second."));
+        rx7FD(remainingTime, player, "Punch Throw");
         return;
     }
     cooldown.setCooldown("MagicianRedP", playerID, cooldownTime);
@@ -478,12 +479,11 @@ public void magicianRedCFH(Player player, UUID playerID, FileConfiguration confi
     boolean mobGrief = config.getBoolean("MagicianRed.mob_grief", true);
     if (cooldown.isOnCooldown("MagicianRedCFH", playerID)) {
         long remainingTime = cooldown.getRemainingTime("MagicianRedCFH", playerID);
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "Cross Fire Hurricane is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " second."));
+        rx7FD(remainingTime, player, "Cross Fire Hurricane");
         return;
     }
     cooldown.setCooldown("MagicianRedCFH", playerID, cooldownTime);
-    String msg = ChatColor.RED + "Magician Red: " + ChatColor.BOLD + "Cross Fire Hurricane!";
-    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(msg));
+    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "Magician Red: " + ChatColor.BOLD + "Cross Fire Hurricane!"));
     if (mobGrief == false) {
         Bukkit.getWorlds().forEach(world -> world.setGameRule(GameRule.MOB_GRIEFING, false));
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
@@ -516,7 +516,7 @@ public void hermitPurple(Player player, UUID playerID, FileConfiguration config)
     int cooldownTime = config.getInt("HermitPurple.cooldown", 20) * 1000;
     if (cooldown.isOnCooldown("HermitPurple", playerID)) {
         long remainingTime = cooldown.getRemainingTime("HermitPurple", playerID);
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "Hermit Purple is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " second."));
+        rx7FD(remainingTime, player, "Overdrive");
         return;
     }
     cooldown.setCooldown("HermitPurple", playerID, cooldownTime);
@@ -564,7 +564,7 @@ public void killerQueenP(Player player, UUID playerID, Entity entity, FileConfig
     int cooldownTime = config.getInt("KillerQueen.cooldown_punch", 15) * 1000;
     if (cooldown.isOnCooldown("KillerQueenP", playerID)) {
         long remainingTime = cooldown.getRemainingTime("KillerQueenP", playerID);
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "Punch Throw is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " second."));
+        rx7FD(remainingTime, player, "Punch Throw");
         return;
     }
     cooldown.setCooldown("KillerQueenP", playerID, cooldownTime);
@@ -588,7 +588,7 @@ public void killerQueenABT(Player player, UUID playerID, FileConfiguration confi
     boolean grief = config.getBoolean("KillerQueen.abt_causeExplosion", false);
     if (cooldown.isOnCooldown("KillerQueenABT", playerID)) {
         long remainingTime = cooldown.getRemainingTime("KillerQueenABT", playerID);
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "Air Bomb Transmutation is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " second."));
+        rx7FD(remainingTime, player, "Air Bomb Transmutation");
         return;
     }
     cooldown.setCooldown("KillerQueenABT", playerID, cooldownTime);
@@ -622,7 +622,7 @@ public void killerQueenBTD(Player player, UUID playerID, Block block, FileConfig
     int cooldownTime = config.getInt("KillerQueen.cooldown", 120) * 1000;
     if (cooldown.isOnCooldown("KillerQueen", playerID)) {
         long remainingTime = cooldown.getRemainingTime("KillerQueen", playerID);
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "Another one bites the Dust is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " second."));
+        rx7FD(remainingTime, player, "Bites The Dust");
         return;
     }
 
@@ -655,7 +655,7 @@ public void novemberRain(Player player, UUID playerID, FileConfiguration config)
     int cooldownTime = config.getInt("NovemberRain.cooldown", 600) * 1000;
     if (cooldown.isOnCooldown("NovemberRain", playerID)) {
         long remainingTime = cooldown.getRemainingTime("NovemberRain", playerID);
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "November Rain is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " second."));
+        rx7FD(remainingTime, player, "Heavy Rain");
         return;
     }
     cooldown.setCooldown("NovemberRain", playerID, cooldownTime);
@@ -693,7 +693,7 @@ public void silverChariotHR(Player player, UUID playerID, Entity entity, FileCon
 
     if (cooldown.isOnCooldown("SilverChariot", playerID)) {
         long remainingTime = cooldown.getRemainingTime("SilverChariot", playerID);
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "Hora Rush is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " second."));
+        rx7FD(remainingTime, player, "Hora Rush");
         return;
     }
     cooldown.setCooldown("SilverChariot", playerID, cooldownTime);
@@ -715,7 +715,7 @@ public void tuskA2(Player player, UUID playerID, FileConfiguration config){
     int cooldownTime = config.getInt("Tusk.cooldown", 15) * 1000;
     if (cooldown.isOnCooldown("Tusk", playerID)) {
         long remainingTime = cooldown.getRemainingTime("Tusk", playerID);
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "Golden Rectangle Nails is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " second."));
+        rx7FD(remainingTime, player, "Golden Rectangle Nails");
         return;
     }
     cooldown.setCooldown("Tusk", playerID, cooldownTime);
@@ -735,7 +735,7 @@ public void tuskA3(Player player, UUID playerID, FileConfiguration config) {
     int cooldownTime = cT / level;
     if (cooldown.isOnCooldown("TuskA3", playerID)) {
         long remainingTime = cooldown.getRemainingTime("Tusk", playerID);
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "Spatial Wormhole is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " second."));
+        rx7FD(remainingTime, player, "Spatial Wormhole");
         return;
     }
     cooldown.setCooldown("TuskA3", playerID, cooldownTime);
@@ -755,7 +755,7 @@ public void hierophantGreenP(Player player, UUID playerID, Entity entity, FileCo
     int cooldownTime = config.getInt("HierophantGreen.cooldown_punch", 15) * 1000;
     if (cooldown.isOnCooldown("HierophantGreenP", playerID)) {
         long remainingTime = cooldown.getRemainingTime("HierophantGreenP", playerID);
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "Punch Throw is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " second."));
+        rx7FD(remainingTime, player, "Punch Throw");
         return;
     }
     cooldown.setCooldown("HierophantGreenP", playerID, cooldownTime);
@@ -784,7 +784,7 @@ public void hierophantGreenES(Player player, UUID playerID, FileConfiguration co
 
     if (cooldown.isOnCooldown("HierophantGreenES", playerID)) {
         long remainingTime = cooldown.getRemainingTime("HierophantGreenES", playerID);
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "Emerald Splash is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " seconds."));
+        rx7FD(remainingTime, player, "Emerald Splash");
         return;
     }
     cooldown.setCooldown("HierophantGreenES", playerID, cooldownTime);
@@ -813,7 +813,7 @@ public void heavensDoor(Player player, UUID playerID, Entity entity, FileConfigu
     Player target = (Player) entity;
     if (cooldown.isOnCooldown("HeavensDoor", playerID)) {
         long remainingTime = cooldown.getRemainingTime("HeavensDoor", playerID);
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "Book Transmutation is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " second."));
+        rx7FD(remainingTime, player, "Book Transmutation");
         return;
     }
     cooldown.setCooldown("HeavensDoor", playerID, cooldownTime);
@@ -848,7 +848,7 @@ public void sexyPistols(Player player, UUID playerID, FileConfiguration config){
 
     if (cooldown.isOnCooldown("SexyPistols", playerID)) {
         long remainingTime = cooldown.getRemainingTime("SexyPistols", playerID);
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "Sexy Pistols is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " second."));
+        rx7FD(remainingTime, player, "Sexy Pistols");
         return;
     }
 
@@ -917,7 +917,7 @@ public void softAndWetP(Player player, UUID playerID, Entity entity, FileConfigu
     int cooldownTime = config.getInt("SoftAndWet.p_cooldown", 15) * 1000;
     if (cooldown.isOnCooldown("SoftAndWetP", playerID)) {
         long remainingTime = cooldown.getRemainingTime("SoftAndWetP", playerID);
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "Punch Throw is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " second."));
+        rx7FD(remainingTime, player, "Punch Throw");
         return;
     }
     cooldown.setCooldown("SoftAndWetP", playerID, cooldownTime);
@@ -938,7 +938,7 @@ public void softAndWetBG(Player player, UUID playerID, FileConfiguration config)
 
     if (cooldown.isOnCooldown("SoftAndWet", playerID)) {
         long remainingTime = cooldown.getRemainingTime("SoftAndWet", playerID);
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR,TextComponent.fromLegacyText(ChatColor.RED + "Bubble Generation is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " seconds."));
+        rx7FD(remainingTime, player, "Bubble Generation");
         return;
     }
     cooldown.setCooldown("SoftAndWet", playerID, cooldownTime);
@@ -962,7 +962,7 @@ public void purpleHazeP(Player player, UUID playerID, Entity entity, FileConfigu
     int cooldownTime = config.getInt("PurpleHaze.p_cooldown", 15) * 1000;
     if (cooldown.isOnCooldown("PurpleHazeP", playerID)) {
         long remainingTime = cooldown.getRemainingTime("PurpleHazeP", playerID);
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "Punch Throw is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " second."));
+        rx7FD(remainingTime, player, "Punch Throw");
         return;
     }
     cooldown.setCooldown("PurpleHazeP", playerID, cooldownTime);
@@ -993,7 +993,7 @@ public void purpleHazeKVI(Player player, UUID playerID, FileConfiguration config
     int cooldownTime = config.getInt("PurpleHaze.cooldown", 5) * 1000;
     if (cooldown.isOnCooldown("PurpleHazeKVI", playerID)) {
         long remainingTime = cooldown.getRemainingTime("PurpleHazeKVI", playerID);
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "Killer Virus Infection is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " second."));
+        rx7FD(remainingTime, player, "Killer Virus Infection");
         return;
     }
     cooldown.setCooldown("PurpleHazeKVI", playerID, cooldownTime);
@@ -1031,7 +1031,7 @@ public void spiceGirlP(Player player, UUID playerID, Entity entity, FileConfigur
     int cooldownTime = config.getInt("SpiceGirl.punch_cooldown", 15) * 1000;
    if (cooldown.isOnCooldown("SpiceGirlP", playerID)) {
         long remainingTime = cooldown.getRemainingTime("SpiceGirlP", playerID);
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "Punch Throw is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " second."));
+        rx7FD(remainingTime, player, "Punch Throw");
         return;
     }
     cooldown.setCooldown("SpiceGirlP", playerID, cooldownTime);
@@ -1056,7 +1056,7 @@ public void whitesnakeP(Player player, UUID playerID, Entity entity, FileConfigu
     int cooldownTime = config.getInt("Whitesnake.p_cooldown", 15) * 1000;
     if (cooldown.isOnCooldown("WhitesnakeP", playerID)) {
         long remainingTime = cooldown.getRemainingTime("WhitesnakeP", playerID);
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "Punch Throw is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " second."));
+        rx7FD(remainingTime, player, "Punch Throw");
         return;
     }
     cooldown.setCooldown("WhitesnakeP", playerID, cooldownTime);
@@ -1083,17 +1083,19 @@ public void whitesnakeDE(Player player, UUID playerID, Entity entity, FileConfig
     int cooldownTime = cT / level;
     if (cooldown.isOnCooldown("WhitesnakeDI", playerID)) {
         long remainingTime = cooldown.getRemainingTime("WhitesnakeDI", playerID);
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "DISC Extraction is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " second."));
+        rx7FD(remainingTime, player, "DISC Extraction");
         return;
     }
     cooldown.setCooldown("WhitesnakeDI", playerID, cooldownTime);
     UUID targetID = target.getUniqueId();
     FileConfiguration stConfig = YamlConfiguration.loadConfiguration(standFile);
     List<String> log = stConfig.getStringList("players." + playerID + ".standLog");
+    String tspmo = getPlayerStand(targetID);
     if (log.contains(targetID.toString())) {
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "You have already reset the stand of " + ChatColor.GRAY + target.getName() + "!"));
         return;
     }
+    discCreation(player, tspmo);
     stConfig.set("players." + targetID, null);
     player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.WHITE + "Whitesnake: " + ChatColor.BOLD + "DISC Extraction!"));
     rx7FC(2, 20, playerID);
@@ -1115,7 +1117,7 @@ public void cmoonP(Player player, UUID playerID, Entity entity, FileConfiguratio
     int cooldownTime = config.getInt("CMOON.p_cooldown", 15) * 1000;
    if (cooldown.isOnCooldown("CMOONP", playerID)) {
         long remainingTime = cooldown.getRemainingTime("CMOONP", playerID);
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "Punch Throw is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " second."));
+        rx7FD(remainingTime, player, "Punch Throw");
         return;
     }
     cooldown.setCooldown("CMOONP", playerID, cooldownTime);
@@ -1143,7 +1145,7 @@ public void cmoonSI(Player player, UUID playerID, Entity entity, FileConfigurati
     int cooldownTime = config.getInt("CMOON.si_cooldown", 120) * 1000;
     if (cooldown.isOnCooldown("CMOONSI", playerID)) {
         long remainingTime = cooldown.getRemainingTime("CMOONSI", playerID);
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "Surface Inversion is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " second."));
+        rx7FD(remainingTime, player, "Surface Inversion");
         return;
     }
     cooldown.setCooldown("CMOONSI", playerID, cooldownTime);
@@ -1163,7 +1165,7 @@ public void madeInHeavenP(Player player, UUID playerID, Entity entity, FileConfi
     int cooldownTime = config.getInt("MadeInHeaven.p_cooldown", 15) * 1000;
     if (cooldown.isOnCooldown("MadeInHeavenP", playerID)) {
         long remainingTime = cooldown.getRemainingTime("MadeInHeavenP", playerID);
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "Punch Throw is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " second."));
+        rx7FD(remainingTime, player, "Punch Throw");
         return;
     }
     cooldown.setCooldown("MadeInHeavenP", playerID, cooldownTime);
@@ -1188,7 +1190,7 @@ public void madeInHeavenTA(Player player, UUID playerID, FileConfiguration confi
     int cooldownTime = config.getInt("MadeInHeaven.ta_cooldown", 1200) * 1000;
     if (cooldown.isOnCooldown("MadeInHeavenTA", playerID)) {
         long remainingTime = cooldown.getRemainingTime("MadeInHeavenTA", playerID);
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "Time Acceleration is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " second."));
+        rx7FD(remainingTime, player, "MADE IN HEAVEN");
         return;
     }
     cooldown.setCooldown("MadeInHeavenTA", playerID, cooldownTime);
@@ -1222,7 +1224,7 @@ public void achtungBaby(Player player, UUID playerID, FileConfiguration config){
     int cooldownTime = config.getInt("AchtungBaby.cooldown", 120) * 1000;
     if (cooldown.isOnCooldown("AchtungBaby", playerID)) {
         long remainingTime = cooldown.getRemainingTime("AchtungBaby", playerID);
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "Achtung Baby is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " second."));
+        rx7FD(remainingTime, player, "Achtung Baby");
         return;
     }
     cooldown.setCooldown("AchtungBaby", playerID, cooldownTime);
@@ -1251,7 +1253,7 @@ public void rhcpP(Player player, UUID playerID, Entity entity, FileConfiguration
     int cooldownTime = config.getInt("RedHotChiliPepper.p_cooldown", 15) * 1000;
    if (cooldown.isOnCooldown("RHCPPu", playerID)) {
         long remainingTime = cooldown.getRemainingTime("RHCPPu", playerID);
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "Punch Throw is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " second."));
+        rx7FD(remainingTime, player, "Punch Throw");
         return;
     }
     cooldown.setCooldown("RHCPPu", playerID, cooldownTime);
@@ -1280,7 +1282,7 @@ public void rhcpLS(Player player, UUID playerID, FileConfiguration config){
         
     if (cooldown.isOnCooldown("RHCPL", playerID)) {
         long remainingTime = cooldown.getRemainingTime("RHCPL", playerID);
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "Lightning Strike is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " second."));
+        rx7FD(remainingTime, player, "Lightning Strike");
         return;
     }
     Location targetLocation = player.getTargetBlock(null, 50).getLocation();
@@ -1305,7 +1307,7 @@ public void diverDownP(Player player, UUID playerID, Entity entity, FileConfigur
     int cooldownTime = config.getInt("DiverDown.punch_cooldown", 15) * 1000;
    if (cooldown.isOnCooldown("DiverDownP", playerID)) {
         long remainingTime = cooldown.getRemainingTime("DiverDownP", playerID);
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "Punch Throw is on cooldown! You need to wait " + ChatColor.GRAY + ChatColor.BOLD + remainingTime + " second."));
+        rx7FD(remainingTime, player, "Punch Throw");
         return;
     }
     cooldown.setCooldown("DiverDownP", playerID, cooldownTime);
@@ -1753,6 +1755,8 @@ public void onBlockInteract(PlayerInteractEvent event) {
             if(stand.equalsIgnoreCase("Made in Heaven"))player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1 + level, false, false));
         }, 10L);
     }
+
+    //STAND ARROW S
     @EventHandler
     public void onRightClick(PlayerInteractEvent event) {
         Player player = event.getPlayer();
@@ -1803,40 +1807,119 @@ public void onBlockInteract(PlayerInteractEvent event) {
                 }
             }
         }
-        private void standFileC() {
-            try {
+    private void standFileC() {
+        try {
+            if (!standFile.exists()) {
+                standFile.createNewFile();
+                Bukkit.getLogger().info("stands.yml file created successfully.");
+            }
+        } catch (IOException e) {
+            Bukkit.getLogger().severe(String.format("stands.yml couldn't crated: %s", e.getMessage()));
+        }
+    }
+
+    private String getRandomStand() {
+        Map<String, List<String>> rarityMap = new HashMap<>();
+        rarityMap.put("Common", config.getStringList("Stands.Common"));
+        rarityMap.put("Rare", config.getStringList("Stands.Rare"));
+        rarityMap.put("Epic", config.getStringList("Stands.Epic"));
+        rarityMap.put("Legendary", config.getStringList("Stands.Legendary"));
+
+        int chance = new Random().nextInt(100) + 1;
+        List<String> targetList;
+
+        if (chance <= 50) targetList = rarityMap.get("Common");
+        else if (chance <= 80) targetList = rarityMap.get("Rare");
+        else if (chance <= 95) targetList = rarityMap.get("Epic");
+        else targetList = rarityMap.get("Legendary");
+        return targetList.isEmpty() ? "Unknown Stand" : 
+        targetList.get(new Random().nextInt(targetList.size()));
+    }
+
+    private void saveSC() {
+        try {
+            standConfig.save(standFile);
+        }catch (IOException e) {
+            Bukkit.getLogger().severe(String.format("stands.yml couldn't saved: %s", e.getMessage()));
+        }
+    }
+    //STAND ARROW E
+
+    // STAND DISC S
+    private void discCreation(Player player, String targetS) {
+        NamespacedKey key = new NamespacedKey(plugin, "stand_disc");
+        ItemStack disc = new ItemStack(Material.MUSIC_DISC_13);
+        ItemMeta meta = disc.getItemMeta();
+        meta.setDisplayName(ChatColor.GOLD + targetS + "'s Stand Disc");
+        List<String> lore = new ArrayList<>();
+        lore.add(ChatColor.GRAY + "It contains " + targetS + "'s stand.");
+        meta.setLore(lore);
+        meta.getPersistentDataContainer().set(key, PersistentDataType.STRING, "s_disc");
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        meta.setCustomModelData(1923); 
+        disc.setItemMeta(meta);
+        disc.setAmount(1);
+        player.getInventory().addItem(disc);
+        player.sendMessage(ChatColor.GREEN + "You have created a Stand Disc!");
+    }
+
+    @EventHandler
+    public void discActivate(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        ItemStack item = player.getInventory().getItemInMainHand();
+
+        if (item.getType() != Material.MUSIC_DISC_13 || !item.hasItemMeta()) return;
+        ItemMeta meta = item.getItemMeta();
+        PersistentDataContainer data = meta.getPersistentDataContainer();
+        NamespacedKey key = new NamespacedKey(plugin, "stand_disc");
+        if (event.getHand() != EquipmentSlot.HAND) return;
+        if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (data.has(key, PersistentDataType.STRING) && 
+            data.get(key, PersistentDataType.STRING).equals("s_disc")) {
                 if (!standFile.exists()) {
-                    standFile.createNewFile();
-                    Bukkit.getLogger().info("stands.yml file created successfully.");
+                    standFileC();
                 }
-            } catch (IOException e) {
-                Bukkit.getLogger().severe(String.format("stands.yml couldn't crated: %s", e.getMessage()));
+                try {
+                    standConfig.load(standFile);
+                } catch (IOException | org.bukkit.configuration.InvalidConfigurationException e) {
+                    player.sendMessage(ChatColor.RED + "Failed to load stand data.");
+                    Bukkit.getLogger().severe(String.format("stands.yml couldn't be loaded: %s", e.getMessage()));
+                }
+                UUID playerId = player.getUniqueId();
+                String playerPath = "players." + playerId;
+                String standName = ChatColor.stripColor(meta.getDisplayName());
+                if (standName.endsWith("'s Stand Disc")) {
+                    standName = standName.replace("'s Stand Disc", "").trim();
+                }
+                standConfig.set(playerPath + ".stand", standName);
+                standConfig.set(playerPath + ".standLog", new ArrayList<>());
+                standConfig.set(playerPath + ".standXP.Stand.XP", 0);
+                standConfig.set(playerPath + ".standXP.Stand.Level", 1);
+                standConfig.set(playerPath + ".standXP.Ability1.XP", 0);
+                standConfig.set(playerPath + ".standXP.Ability1.Level", 1);
+                standConfig.set(playerPath + ".standXP.Ability2.XP", 0);
+                standConfig.set(playerPath + ".standXP.Ability2.Level", 0);
+                standConfig.set(playerPath + ".standXP.Ability3.XP", 0);
+                standConfig.set(playerPath + ".standXP.Ability3.Level", 0);
+                saveSC();
+                player.sendMessage(ChatColor.GRAY + "You used a DISC and now your stand is: " + ChatColor.GOLD + standName);
+                player.getInventory().setItemInMainHand(null);
             }
+    }
+
+    @EventHandler
+    public void jukeboxBlocker(PlayerInteractEvent event) {
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (event.getClickedBlock() == null || event.getClickedBlock().getType() != Material.JUKEBOX) return;
+        Player player = event.getPlayer();
+        ItemStack item = player.getInventory().getItemInMainHand();
+        if (item.getType() != Material.MUSIC_DISC_13 || !item.hasItemMeta()) return;
+        ItemMeta meta = item.getItemMeta();
+        PersistentDataContainer data = meta.getPersistentDataContainer();
+        NamespacedKey key = new NamespacedKey(plugin, "stand_disc");
+        if (data.has(key, PersistentDataType.STRING) && data.get(key, PersistentDataType.STRING).equals("s_disc")) {
+            event.setCancelled(true);
         }
-
-        private String getRandomStand() {
-            Map<String, List<String>> rarityMap = new HashMap<>();
-            rarityMap.put("Common", config.getStringList("Stands.Common"));
-            rarityMap.put("Rare", config.getStringList("Stands.Rare"));
-            rarityMap.put("Epic", config.getStringList("Stands.Epic"));
-            rarityMap.put("Legendary", config.getStringList("Stands.Legendary"));
-
-            int chance = new Random().nextInt(100) + 1;
-            List<String> targetList;
-
-            if (chance <= 50) targetList = rarityMap.get("Common");
-            else if (chance <= 80) targetList = rarityMap.get("Rare");
-            else if (chance <= 95) targetList = rarityMap.get("Epic");
-            else targetList = rarityMap.get("Legendary");
-            return targetList.isEmpty() ? "Unknown Stand" : 
-                targetList.get(new Random().nextInt(targetList.size()));
-        }
-
-        private void saveSC() {
-            try {
-                standConfig.save(standFile);
-            }catch (IOException e) {
-                Bukkit.getLogger().severe(String.format("stands.yml couldn't saved: %s", e.getMessage()));
-            }
-        }
+    }
+    // STAND DISC E
 }
