@@ -15,6 +15,7 @@ Then while the arrow is on your main hand right clicking will give you a random 
 3. /stand use - Gives you your stand item.
 4. /stand upgrade - Opens up a GUI to upgrade your stand's abilities.
 5. /stand reload - Reloads the config files.
+6. /stand delete <user> - Deletes the user's stand.
 
 -PERMISSIONS-
 1. standp.admin The person that has this permission can use /stand reload command
