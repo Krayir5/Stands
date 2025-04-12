@@ -1323,6 +1323,8 @@ public void diverDownP(Player player, UUID playerID, Entity entity, FileConfigur
     player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.LIGHT_PURPLE + player.getName() + ": " + ChatColor.BOLD + "DIVER DOWN!"));
 }
 
+//Paisley Park, Speed King, Paper Moon King, Ozon Baby, Wonder of U  || Stand History
+
 @EventHandler
 public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
     Player player = event.getPlayer();
@@ -1856,7 +1858,7 @@ public void onBlockInteract(PlayerInteractEvent event) {
         meta.setLore(lore);
         meta.getPersistentDataContainer().set(key, PersistentDataType.STRING, "s_disc");
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        meta.setCustomModelData(1923); 
+        meta.setCustomModelData(1923);
         disc.setItemMeta(meta);
         disc.setAmount(1);
         player.getInventory().addItem(disc);

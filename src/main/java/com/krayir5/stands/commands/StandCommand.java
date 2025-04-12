@@ -1,13 +1,16 @@
 package com.krayir5.stands.commands;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -21,7 +24,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.krayir5.stands.utils.GUIS.StandHMenu;
 import com.krayir5.stands.utils.GUIS.StandUMenu;
-
+@SuppressWarnings("")
 public class StandCommand implements CommandExecutor, TabCompleter {
     private final JavaPlugin plugin;
     private final File standFile;
@@ -44,6 +47,20 @@ public class StandCommand implements CommandExecutor, TabCompleter {
         return item;
     }
 
+    private String deleteStand(UUID playerID){
+        String stand = stConfig.getString("players." + playerID + ".stand");
+        if (stand != null) {
+            String playerPath = "players." + playerID;
+            stConfig.set(playerPath, null);
+            try {
+                stConfig.save(standFile);
+            } catch (IOException e) {
+                Bukkit.getLogger().severe(String.format("stands.yml couldn't be saved: %s", e.getMessage()));
+            }
+        }
+        return stand;
+    }
+
     private boolean isStandItem(ItemStack item) {
         if (item == null || item.getType() != Material.NETHER_STAR) {
             return false;
@@ -56,6 +73,12 @@ public class StandCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         Player player = (Player) sender;
         UUID playerID = player.getUniqueId();
+        try {
+            stConfig.load(standFile);
+        } catch (IOException | org.bukkit.configuration.InvalidConfigurationException e) {
+            player.sendMessage(ChatColor.RED + "Failed to load stand data.");
+            Bukkit.getLogger().severe(String.format("stands.yml couldn't be loaded: %s", e.getMessage()));
+        }
         String stand = stConfig.getString("players." + playerID + ".stand");
         if (args.length == 0) {
             player.sendMessage(ChatColor.RED + "Usage: /stand <subcommand>");
@@ -63,12 +86,12 @@ public class StandCommand implements CommandExecutor, TabCompleter {
         }
         String subCommand = args[0].toLowerCase();
         switch (subCommand) {
-        
             case "help":
                 sender.sendMessage("§6Help Menu:");
                 sender.sendMessage("§b/stand help - §fShows you all avaliable commands on plugin.");
                 sender.sendMessage("§b/stand dictionary - §fShows you all avaliable stands and their power/abilities.");
                 sender.sendMessage("§b/stand use - §fGives you your stand item.");
+                sender.sendMessage("§b/stand delete <user> - §fDeletes the user's stand.");
                 sender.sendMessage("§b/stand upgrade - §fOpens up a GUI to upgrade your stand's abilities.");
                 sender.sendMessage("§b/stand reload - §fReloads the config files.");
                 break;
@@ -89,7 +112,7 @@ public class StandCommand implements CommandExecutor, TabCompleter {
             
             case "use":
                 if (stand == null) {
-                    player.sendMessage(ChatColor.RED + "You need to have a stand first! For that you can use /standpick command.");
+                    player.sendMessage(ChatColor.RED + "You need to have a stand first! For that you need to get a Stand Arrow and right click it.");
                     return true;
                 }
                 ItemStack offHandItem = player.getInventory().getItemInOffHand();
@@ -124,10 +147,57 @@ public class StandCommand implements CommandExecutor, TabCompleter {
                 player.sendMessage("Wow, a Trueno in this economy?");
                 break;
             
-            default:
-                player.sendMessage(ChatColor.RED + "Unknown subcommand: " + subCommand);
+            case "delete":
+                if (!player.hasPermission("stand.admin") || !player.isOp()) {
+                    player.sendMessage(ChatColor.RED + "You don't have permission to delete other people's stands.");
+                    return true;
+                }
+                if (args.length == 1){
+                    if (stand == null){
+                        player.sendMessage(ChatColor.RED + "You don't have a stand to delete!");
+                        return true;
+                    }
+                    deleteStand(playerID);
+                    player.sendMessage(ChatColor.GREEN + "Your stand has been deleted successfully.");
+                    return true;
+                }else if (args.length == 2){
+                    String targetName = args[1];
+                    OfflinePlayer target;
+                    UUID targetUUID = null;
+
+                    Player online = Bukkit.getPlayerExact(targetName);
+                    if (online != null) {
+                        target = online;
+                        targetUUID = online.getUniqueId();
+                    } else {
+                        target = Arrays.stream(Bukkit.getOfflinePlayers())
+                                .filter(p -> p.getName() != null && p.getName().equalsIgnoreCase(targetName))
+                                .findFirst()
+                                .orElse(null);
+                    
+                        if (target != null) {
+                            targetUUID = target.getUniqueId();
+                        }
+                    }
+                    
+                    if (targetUUID == null) {
+                        player.sendMessage(ChatColor.RED + "Player '" + targetName + "' not found.");
+                        return true;
+                    }
+                    if(!stConfig.contains("players." + targetUUID + ".stand")){
+                        player.sendMessage(ChatColor.RED + targetName + " doesn't have a stand to delete.");
+                        return true;
+                    }
+                    deleteStand(targetUUID);
+                    player.sendMessage(ChatColor.GREEN + "Deleted stand for player: " + ChatColor.RED + targetName);
+                    return true;
+                }
                 break;
-        }
+
+                default:
+                    player.sendMessage(ChatColor.RED + "Unknown subcommand: " + subCommand);
+                    break;
+            }
         return true;
     }
 
@@ -136,7 +206,7 @@ public class StandCommand implements CommandExecutor, TabCompleter {
         List<String> suggestions = new ArrayList<>();
         
         if (args.length == 1) {
-            List<String> subCommands = Arrays.asList("help", "dictionary", "use", "upgrade", "reload");
+            List<String> subCommands = Arrays.asList("help", "dictionary", "use", "upgrade", "reload", "delete");
             String input = args[0].toLowerCase();
             
             subCommands.stream()
