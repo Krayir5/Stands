@@ -10,7 +10,10 @@ Stands: # Those are the only stands for now, so you can change the rarity BUT yo
   - November Rain
   - Crazy Diamond
   - Soft & Wet
+  - Speed King
+  - Ozon Baby
   Epic:
+  - Paisley Park
   - Purple Haze
   - Killer Queen
   - Hierophant Green
@@ -212,3 +215,28 @@ DiverDown:
   damage: 1.5
   hits: 4
   knockback: 0.6
+
+PaisleyPark:
+  pDamage: 1.0
+  pHits: 3
+  pKnockback: 0.4
+  pCooldown: 15
+  nRange: 30.0
+  nDuration: 10
+  nCooldown: 600
+
+SpeedKing:
+  pDamage: 1.5
+  pHits: 4
+  pKnockback: 0.6
+  pCooldown: 15
+  haRadius: 5
+  haDuration: 10
+  haDamage: 1.5
+  haCooldown: 30
+
+OzonBaby:
+  pmRadius: 6
+  pmDuration: 8
+  pmDamage: 1.2
+  pmCooldown: 600

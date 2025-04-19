@@ -144,6 +144,24 @@ public class StandHMenu extends Menu {
             .lore("§8§oRight clicking an entity will throw punches to it.", "§8§oPassively you can breathe underwater.", "")
             .get()
         );
+
+        setInvItem(21, ItemC.of(HeadCreator.cch("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTYzNWU2NjY0MTE1ZjM5ZGZhN2FhNjcyMmUxYjJjYzlmYTNhNTcxYTlmZmYzODZlZTIwNWQwMjk2MzMyMzExZSJ9fX0="))
+            .name("§bPaisley Park")
+            .lore("§8§oRight clicking an entity will throw punches to it.", "§8§oPressing F will track a player within stand's range.", "")
+            .get()
+        );
+
+        setInvItem(22, ItemC.of(HeadCreator.cch("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmJkODU3ZTUyZDQ4NmE2Y2FlYjRlYTQ0MjE1YjRlMWQ4MDIxYjFkYzAyODUxNjBmN2ZiZDk4YzYyMzE0ZDFkIn19fQ=="))
+            .name("§bSpeed King")
+            .lore("§8§oRight clicking an entity will throw punches to it.", "§8§oPressing F will heat up the room!", "")
+            .get()
+        );
+
+        setInvItem(23, ItemC.of(HeadCreator.cch("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2Y3Y2RlZWZjNmQzN2ZlY2FiNjc2YzU4NGJmNjIwODMyYWFhYzg1Mzc1ZTlmY2JmZjI3MzcyNDkyZDY5ZiJ9fX0="))
+            .name("§bOzon Baby")
+            .lore("§8§oRight clicking a block will place a trap which crates a special area!", "")
+            .get()
+        );
         
         this.displayTo(player);
     }

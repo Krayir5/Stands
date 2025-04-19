@@ -53,7 +53,7 @@ public class Plugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new StandItem(), this);
         getServer().getPluginManager().registerEvents(new MenuL(), this);
         getServer().getPluginManager().registerEvents(new StandListener(getConfig(), this, standFile), this);
-        /*getServer().getPluginManager().registerEvents(new StandAS(this), this); SSSH this is a secret */
+        //getServer().getPluginManager().registerEvents(new StandAS(this), this); Still not ready :c
         checkForUpdates();
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(getDescription().getVersion(), latestVersion, standFile), this);
         getServer().getPluginManager().registerEvents(new PlayerDeathListener(standFile), this);

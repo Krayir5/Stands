@@ -10,6 +10,7 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -20,6 +21,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.krayir5.stands.utils.GUIS.StandHMenu;
@@ -47,6 +49,17 @@ public class StandCommand implements CommandExecutor, TabCompleter {
         return item;
     }
 
+    private ItemStack cPPI(){
+        ItemStack item = new ItemStack(Material.COMPASS);
+        ItemMeta meta = item.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName(ChatColor.GOLD + "Paisley Park's item");
+            meta.setCustomModelData(1453);
+            item.setItemMeta(meta);
+        }
+        return item;
+    }
+
     private String deleteStand(UUID playerID){
         String stand = stConfig.getString("players." + playerID + ".stand");
         if (stand != null) {
@@ -59,6 +72,24 @@ public class StandCommand implements CommandExecutor, TabCompleter {
             }
         }
         return stand;
+    }
+
+    public ItemStack createLocacaca(){
+        ItemStack fruit = new ItemStack(Material.CARROT);
+        ItemMeta meta = fruit.getItemMeta();
+    
+        meta.setDisplayName(ChatColor.LIGHT_PURPLE + "Locacaca Fruit");
+    
+        List<String> lore = new ArrayList<>();
+        lore.add(ChatColor.GRAY + "A mysterious fruit that grants");
+        lore.add(ChatColor.GRAY + "power... at a cost.");
+        meta.setLore(lore);
+        meta.setCustomModelData(1337);
+        NamespacedKey key = new NamespacedKey(plugin, "locacaca");
+        meta.getPersistentDataContainer().set(key, PersistentDataType.STRING, "true");
+    
+        fruit.setItemMeta(meta);
+        return fruit;
     }
 
     private boolean isStandItem(ItemStack item) {
@@ -123,7 +154,14 @@ public class StandCommand implements CommandExecutor, TabCompleter {
                     player.sendMessage(ChatColor.RED + "You already have a stand item in your left hand.");
                     return true;
                 }
-                player.getInventory().setItemInOffHand(createStandItem(stand));
+                switch(stand){
+                    case "Paisley Park":
+                        player.getInventory().setItemInOffHand(cPPI());
+                        break;
+                    default:
+                        player.getInventory().setItemInOffHand(createStandItem(stand));
+                        break;
+                }
                 player.sendMessage(ChatColor.GREEN + "The item of the " + ChatColor.BOLD + ChatColor.GOLD + stand + ChatColor.RESET + ChatColor.GREEN +" is now on your left hand. You can right click to use it.");
                 break;
             
@@ -145,6 +183,10 @@ public class StandCommand implements CommandExecutor, TabCompleter {
             
             case "ae86":
                 player.sendMessage("Wow, a Trueno in this economy?");
+                break;
+
+            case "locacaca":
+                player.getInventory().addItem(createLocacaca());
                 break;
             
             case "delete":
@@ -206,7 +248,7 @@ public class StandCommand implements CommandExecutor, TabCompleter {
         List<String> suggestions = new ArrayList<>();
         
         if (args.length == 1) {
-            List<String> subCommands = Arrays.asList("help", "dictionary", "use", "upgrade", "reload", "delete");
+            List<String> subCommands = Arrays.asList("help", "dictionary", "use", "upgrade", "reload", "locacaca", "delete");
             String input = args[0].toLowerCase();
             
             subCommands.stream()
@@ -217,4 +259,3 @@ public class StandCommand implements CommandExecutor, TabCompleter {
         return suggestions;
     }
 }
-

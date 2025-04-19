@@ -64,6 +64,9 @@ public class StandUMenu extends Menu {
         standAbilities.put("Achtung Baby", new String[]{"Invisibility"});
         standAbilities.put("Red Hot Chili Pepper", new String[]{"Punch Throw", "Lightning Strike"});
         standAbilities.put("Diver Down", new String[]{"Punch Throw"});
+        standAbilities.put("Paisley Park", new String[]{"Punch Throw", "Guidance"});
+        standAbilities.put("Speed King", new String[]{"Punch Throw", "Heat Accumulation"});
+        standAbilities.put("Ozon Baby", new String[]{"Pressure Manipulation"});
     
         String[] abilityNames = standAbilities.getOrDefault(standName, new String[]{});
     

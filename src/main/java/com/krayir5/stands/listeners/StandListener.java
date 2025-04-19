@@ -77,7 +77,7 @@ public class StandListener implements Listener {
     }
 
     private boolean isStandItem(ItemStack item) {
-        if (item == null || item.getType() != Material.NETHER_STAR) {
+        if (item == null || item.getType() != Material.NETHER_STAR && item.getType() != Material.COMPASS){
             return false;
         }
         ItemMeta meta = item.getItemMeta();
@@ -1305,7 +1305,7 @@ public void diverDownP(Player player, UUID playerID, Entity entity, FileConfigur
     int hits = config.getInt("DiverDown.hits", 4);
     double knockbackStrength = config.getDouble("DiverDown.knockback", 0.6);
     int cooldownTime = config.getInt("DiverDown.punch_cooldown", 15) * 1000;
-   if (cooldown.isOnCooldown("DiverDownP", playerID)) {
+    if (cooldown.isOnCooldown("DiverDownP", playerID)) {
         long remainingTime = cooldown.getRemainingTime("DiverDownP", playerID);
         rx7FD(remainingTime, player, "Punch Throw");
         return;
@@ -1320,10 +1320,187 @@ public void diverDownP(Player player, UUID playerID, Entity entity, FileConfigur
             rx7FC(1, 1, playerID);
         }, i * 11L);
     }
-    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.LIGHT_PURPLE + player.getName() + ": " + ChatColor.BOLD + "DIVER DOWN!"));
+    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.BLUE + player.getName() + "'s Stand: " + ChatColor.BOLD + "DIVER DOWN!"));
 }
 
-//Paisley Park, Speed King, Paper Moon King, Ozon Baby, Wonder of U  || Stand History
+public void paisleyParkPunch(Player player, UUID playerID, Entity entity, FileConfiguration config){
+    LivingEntity target = (LivingEntity) entity;
+    int level = sileighty(1, playerID);
+    double damage = config.getDouble("PaisleyPark.pDamage", 1.0) * level;
+    int hits = config.getInt("PaisleyPark.pHits", 3);
+    double knockbackStrength = config.getDouble("PaisleyPark.pKnockback", 0.4);
+    int cooldownTime = config.getInt("PaisleyPark.pCooldown", 15) * 1000;
+    if(cooldown.isOnCooldown("PaisleyParkP", playerID)){
+        long remainingTime = cooldown.getRemainingTime("PaisleyParkP", playerID);
+        rx7FD(remainingTime, player, "Punch Throw");
+        return;
+    }
+    cooldown.setCooldown("PaisleyParkP", playerID, cooldownTime);
+    for(int i = 0; i < hits; i++){
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            if(target.isDead()) return;
+            target.damage(damage, player);
+            Vector direction = target.getLocation().toVector().subtract(player.getLocation().toVector()).normalize();
+            target.setVelocity(direction.multiply(knockbackStrength));
+            rx7FC(1, 1, playerID);
+        }, i * 15L);
+    }
+    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.LIGHT_PURPLE + player.getName() + "'s Stand: " + ChatColor.BOLD + "PUNCH!"));
+}
+
+public void paisleyParkGuidance(Player player, UUID playerID, FileConfiguration config){
+    int level = sileighty(2, playerID);
+    int aL = (level <= 1) ? 0 : level;
+    double range = config.getDouble("PaisleyPark.gRange", 50.0) * level;
+    int dT = config.getInt("PaisleyPark.gDuration", 10) + aL;
+    int durationTicks = dT * 20;
+    int cooldownTime = config.getInt("PaisleyPark.gCooldown", 600) * 1000;
+    Player closestTarget = null;
+    double closest = Double.MAX_VALUE;
+    if(cooldown.isOnCooldown("PaisleyParkG", playerID)){
+        long remainingTime = cooldown.getRemainingTime("PaisleyParkG", playerID);
+        rx7FD(remainingTime, player, "Guidance");
+        return;
+    }
+    for (Player other : Bukkit.getOnlinePlayers()) {
+        if (other == player) continue;
+        double distance = player.getLocation().distance(other.getLocation());
+        if (distance <= range && distance < closest) {
+            closest = distance;
+            closestTarget = other;
+        }
+    }
+    if (closestTarget == null) {
+        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.GRAY + "Paisley Park couldn't find anyone to track."));
+        return;
+    }
+    cooldown.setCooldown("PaisleyParkG", playerID, cooldownTime);
+    final Player target = closestTarget;
+    new BukkitRunnable() {
+        long ticksElapsed = 0;
+        @Override
+        public void run() {
+            if (!player.isOnline() || !target.isOnline()) {
+                cancel();
+                return;
+            }
+            if (ticksElapsed >= durationTicks) {
+                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.DARK_PURPLE + "Paisley Park has ended tracking."));
+                cancel();
+                return;
+            }
+            player.setCompassTarget(target.getLocation());
+            ticksElapsed += 20;
+        }
+    }.runTaskTimer(plugin, 0L, 20L);
+    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.LIGHT_PURPLE + "Paisley Park locked on: " + ChatColor.GOLD + target.getName()));
+    rx7FC(2, 5, playerID);
+}
+
+public void speedKingPunch(Player player, UUID playerID, Entity entity, FileConfiguration config){
+    LivingEntity target = (LivingEntity) entity;
+    int level = sileighty(1, playerID);
+    double damage = config.getDouble("SpeedKing.pDamage", 1.5) * level;
+    int hits = config.getInt("SpeedKing.pHits", 4);
+    double knockbackStrength = config.getDouble("SpeedKing.pKnockback", 0.6);
+    int cooldownTime = config.getInt("SpeedKing.pCooldown", 15) * 1000;
+    if(cooldown.isOnCooldown("SpeedKingP", playerID)){
+        long remainingTime = cooldown.getRemainingTime("SpeedKingP", playerID);
+        rx7FD(remainingTime, player, "Punch Throw");
+        return;
+    }
+    cooldown.setCooldown("SpeedKingP", playerID, cooldownTime);
+    for(int i = 0; i < hits; i++){
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            if(target.isDead()) return;
+            target.damage(damage, player);
+            Vector direction = target.getLocation().toVector().subtract(player.getLocation().toVector()).normalize();
+            target.setVelocity(direction.multiply(knockbackStrength));
+            rx7FC(1, 1, playerID);
+        }, i * 11L);
+    }
+    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.LIGHT_PURPLE + player.getName() + "'s Stand: " + ChatColor.BOLD + "SPEEEYYYY SPEYAHH!"));
+}
+
+public void speedKingHeatAccumulation(Player player, UUID playerID, FileConfiguration config){
+    int level = sileighty(2, playerID);
+    int aL = (level <= 1) ? 0 : level;
+    int radius = config.getInt("SpeedKing.haRadius", 5) + aL;
+    int duration = config.getInt("SpeedKing.haDuration", 10) * 20;
+    double baseDamage = config.getDouble("SpeedKing.haDamage", 1.5);
+    double damage = baseDamage + (level * 0.3);
+    int cooldownTime = config.getInt("SpeedKing.haCooldown", 30) * 1000;
+    if (cooldown.isOnCooldown("SpeedKingHA", playerID)) {
+        long remainingTime = cooldown.getRemainingTime("SpeedKingHA", playerID);
+        rx7FD(remainingTime, player, "Heat Accumulation");
+        return;
+    }
+    cooldown.setCooldown("SpeedKing", playerID, cooldownTime);
+    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + "Speed King: " + ChatColor.GOLD + "Heat Accumulation!"));
+    rx7FC(2, 15, playerID);
+    new BukkitRunnable() {
+        int ticksElapsed = 0;
+        @Override
+        public void run() {
+            if (ticksElapsed >= duration) {
+                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.DARK_RED + "Speed King's heat accumulation has ended."));
+                cancel();
+                return;
+            }
+            player.getWorld().spawnParticle(Particle.FLAME, player.getLocation(), 120, radius, 1, radius, 0.05);
+            for (Entity entity : player.getNearbyEntities(radius, radius, radius)) {
+                if (entity instanceof LivingEntity && !entity.getUniqueId().equals(playerID)) {
+                    LivingEntity target = (LivingEntity) entity;
+                    target.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 40, 1));
+                    target.setFireTicks(40);
+                    target.damage(damage, player);
+                }
+            }
+            ticksElapsed += 20;
+        }
+    }.runTaskTimer(plugin, 0L, 20L);
+}
+
+public void ozonBabyPressureManipulation(Player player, UUID playerID, Block block, FileConfiguration config) {
+    int level = sileighty(1, playerID);
+    int aL = (level <= 1) ? 0 : level;
+    int radius = config.getInt("OzonBaby.pmRadius", 6) + aL;
+    int duration = config.getInt("OzonBaby.pmDuration", 8) * 20;
+    double damage = config.getDouble("OzonBaby.pmDamage", 1.2) + (aL * 0.25);
+    int cooldownTime = config.getInt("OzonBaby.pmCooldown", 600) * 1000;
+    if (cooldown.isOnCooldown("OzonBabyPM", playerID)) {
+        long remainingTime = cooldown.getRemainingTime("OzonBabyPM", playerID);
+        rx7FD(remainingTime, player, "Pressure Manipulation");
+        return;
+    }
+    cooldown.setCooldown("OzonBabyPM", playerID, cooldownTime);
+    Location bLoc = block.getLocation().add(0.5, 1.0, 0.5);
+    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.AQUA + "Ozon Baby: " + ChatColor.GRAY + "Trap deployed!"));
+    rx7FC(1, 5, playerID);
+    new BukkitRunnable() {
+        int ticksElapsed = 0;
+        @Override
+        public void run() {
+            if (ticksElapsed >= duration) {
+                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.AQUA + "Ozon Baby's trap has expired."));
+                cancel();
+                return;
+            }
+            bLoc.getWorld().spawnParticle(Particle.CLOUD, bLoc, 50, radius, 0.5, radius, 0.02);
+            for (Player target : Bukkit.getOnlinePlayers()) {
+                if (target.equals(player)) continue;
+                if (!target.getWorld().equals(bLoc.getWorld())) continue;
+                if (target.getLocation().distance(bLoc) <= radius) {
+                    target.damage(damage, player);
+                    target.setVelocity(new Vector(0, 0, 0));
+                    target.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 40, 2));
+                    target.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.BLUE + "The air feels dense!"));
+                }
+            }
+            ticksElapsed += 20;
+        }
+    }.runTaskTimer(plugin, 0L, 20L);
+}
 
 @EventHandler
 public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
@@ -1408,6 +1585,14 @@ public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
 
             case "Made in Heaven":
                 madeInHeavenP(player, playerID, entity, config);
+                break;
+
+            case "Paisley Park":
+                paisleyParkPunch(player, playerID, entity, config);
+                break;
+
+            case "Speed King":
+                speedKingPunch(player, playerID, entity, config);
                 break;
 
             default:
@@ -1516,7 +1701,15 @@ public void onHandSwap(PlayerSwapHandItemsEvent event) {
                     madeInHeavenTA(player, playerID, config);  
                 }
                 break;
-        
+
+            case "Paisley Park":
+                paisleyParkGuidance(player, playerID, config);
+                break;
+
+            case "Speed King":
+                speedKingHeatAccumulation(player, playerID, config);
+                break;
+
             default:
                 break;
         }
@@ -1579,7 +1772,12 @@ public void onBlockInteract(PlayerInteractEvent event) {
                     killerQueenBTD(player, playerID, block, config);
                 }
                 break;
-            
+
+            case "Ozon Baby":
+                if (a3 >= 1) {
+                    ozonBabyPressureManipulation(player, playerID, block, config);
+                }
+                break;
             default:
                 break;
          }
@@ -1924,4 +2122,63 @@ public void onBlockInteract(PlayerInteractEvent event) {
         }
     }
     // STAND DISC E
+
+    //LOCACACA FRUIT S
+    public ItemStack createLocacaca() {
+        ItemStack fruit = new ItemStack(Material.CARROT);
+        ItemMeta meta = fruit.getItemMeta();
+    
+        meta.setDisplayName(ChatColor.LIGHT_PURPLE + "Locacaca Fruit");
+    
+        List<String> lore = new ArrayList<>();
+        lore.add("A mysterious fruit that grants");
+        lore.add("power... at a cost.");
+        meta.setLore(lore);
+        meta.setCustomModelData(1337);
+        NamespacedKey key = new NamespacedKey(plugin, "locacaca");
+        meta.getPersistentDataContainer().set(key, PersistentDataType.STRING, "true");
+    
+        fruit.setItemMeta(meta);
+        return fruit;
+    }
+
+    @EventHandler
+    public void onEatLocacaca(PlayerItemConsumeEvent event) {
+        Player player = event.getPlayer();
+        ItemStack item = event.getItem();
+
+        if (item.getType() != Material.CARROT || !item.hasItemMeta()) return;
+
+        ItemMeta meta = item.getItemMeta();
+        PersistentDataContainer data = meta.getPersistentDataContainer();
+        NamespacedKey key = new NamespacedKey(plugin, "locacaca");
+
+        if (data.has(key, PersistentDataType.STRING) && data.get(key, PersistentDataType.STRING).equals("true")) {
+
+            PotionEffectType[] goodEffects = {
+                PotionEffectType.SPEED,
+                PotionEffectType.INCREASE_DAMAGE,
+                PotionEffectType.REGENERATION,
+                PotionEffectType.FAST_DIGGING,
+                PotionEffectType.HEALTH_BOOST
+            };
+
+            PotionEffectType[] badEffects = {
+                PotionEffectType.BLINDNESS,
+                PotionEffectType.SLOW,
+                PotionEffectType.CONFUSION,
+                PotionEffectType.WEAKNESS,
+                PotionEffectType.HUNGER
+            };
+
+            PotionEffectType good = goodEffects[new Random().nextInt(goodEffects.length)];
+            PotionEffectType bad = badEffects[new Random().nextInt(badEffects.length)];
+
+            player.addPotionEffect(new PotionEffect(good, Integer.MAX_VALUE, 0));
+            player.addPotionEffect(new PotionEffect(bad, Integer.MAX_VALUE, 0));
+
+            player.sendMessage(ChatColor.GREEN + "You feel empowered by " + ChatColor.GOLD + good.getName() + ChatColor.RED + " but cursed with " + ChatColor.DARK_RED + bad.getName());
+        }
+    }
+    //LOCACACA FRUIT E
 }

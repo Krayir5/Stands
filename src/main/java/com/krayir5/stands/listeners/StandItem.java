@@ -18,7 +18,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 public class StandItem implements Listener {
 
     private boolean isStandItem(ItemStack item) {
-        if (item == null || item.getType() != Material.NETHER_STAR) {
+        if (item == null || item.getType() != Material.NETHER_STAR && item.getType() != Material.COMPASS){
             return false;
         }
         ItemMeta meta = item.getItemMeta();
