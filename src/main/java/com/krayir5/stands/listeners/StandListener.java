@@ -129,10 +129,14 @@ public class StandListener implements Listener {
         seconds %= minute;
 
         StringBuilder result = new StringBuilder();
-        if (days > 1) result.append(days).append(" days ");else if (days == 1) result.append(days).append(" day ");
-        if (hours > 1) result.append(hours).append(" hours ");else if (hours == 1) result.append(hours).append(" hour ");
-        if (minutes > 1) result.append(minutes).append(" minutes ");else if (minutes == 1) result.append(minutes).append(" minute ");
-        if (seconds > 1 || result.length() == 0) result.append(seconds).append(" seconds");else if (seconds == 1) result.append(seconds).append(" second");
+        if (days > 1) result.append(days).append(" days ");
+        else if (days == 1) result.append(days).append(" day ");
+        if (hours > 1) result.append(hours).append(" hours ");
+        else if (hours == 1) result.append(hours).append(" hour ");
+        if (minutes > 1) result.append(minutes).append(" minutes ");
+        else if (minutes == 1) result.append(minutes).append(" minute ");
+        if (seconds > 1 || result.length() == 0) result.append(seconds).append(" seconds");
+        else if (seconds == 1) result.append(seconds).append(" second");
     
         p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.RED + aN + " is on cooldown! You need to wait " + ChatColor.GRAY + result.toString().trim()));
     }    
@@ -1602,7 +1606,7 @@ public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
 }
 
 @EventHandler
-public void onHandSwap(PlayerSwapHandItemsEvent event) {
+public void handSwap(PlayerSwapHandItemsEvent event) {
     Player player = event.getPlayer();
     UUID playerID = player.getUniqueId();
     ItemStack itemIn2Hand = event.getMainHandItem();
@@ -1717,7 +1721,7 @@ public void onHandSwap(PlayerSwapHandItemsEvent event) {
 }
 
 @EventHandler
-public void onPlayerInteract(PlayerInteractEvent event) {
+public void onPInteract(PlayerInteractEvent event) {
     Player player = event.getPlayer();
     UUID playerID = player.getUniqueId();
     ItemStack itemIn2Hand = player.getInventory().getItemInOffHand();
@@ -1754,7 +1758,7 @@ public void onPlayerInteract(PlayerInteractEvent event) {
 }
 
 @EventHandler
-public void onBlockInteract(PlayerInteractEvent event) {
+public void onBInterract(PlayerInteractEvent event) {
     Player player = event.getPlayer();
     UUID playerID = player.getUniqueId();
     ItemStack itemIn2Hand = player.getInventory().getItemInOffHand();
@@ -1785,7 +1789,7 @@ public void onBlockInteract(PlayerInteractEvent event) {
 }
 
     @EventHandler
-    public void onProjectileHit(ProjectileHitEvent event) {
+    public void aHit(ProjectileHitEvent event) {
         if (!(event.getEntity() instanceof Snowball))return;
         Snowball standSB = (Snowball) event.getEntity();
         if(!(standSB.getShooter() instanceof Player))return;
@@ -1901,7 +1905,7 @@ public void onBlockInteract(PlayerInteractEvent event) {
     }
 
     @EventHandler
-    public void onPlayerDrinkMilk(PlayerItemConsumeEvent event) {
+    public void milkingThat(PlayerItemConsumeEvent event) {
         if (event.getItem().getType() == Material.MILK_BUCKET) {
             Player player = event.getPlayer();
             UUID playerID = player.getUniqueId();
@@ -1921,7 +1925,7 @@ public void onBlockInteract(PlayerInteractEvent event) {
     }
 
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
+    public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         UUID playerID = player.getUniqueId();
         String stand = getPlayerStand(playerID);
@@ -1939,7 +1943,7 @@ public void onBlockInteract(PlayerInteractEvent event) {
     }
 
     @EventHandler
-    public void onPlayerRespawn(PlayerRespawnEvent event) {
+    public void onRespawn(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
         UUID playerID = player.getUniqueId();
         String stand = getPlayerStand(playerID);
@@ -2122,63 +2126,4 @@ public void onBlockInteract(PlayerInteractEvent event) {
         }
     }
     // STAND DISC E
-
-    //LOCACACA FRUIT S
-    public ItemStack createLocacaca() {
-        ItemStack fruit = new ItemStack(Material.CARROT);
-        ItemMeta meta = fruit.getItemMeta();
-    
-        meta.setDisplayName(ChatColor.LIGHT_PURPLE + "Locacaca Fruit");
-    
-        List<String> lore = new ArrayList<>();
-        lore.add("A mysterious fruit that grants");
-        lore.add("power... at a cost.");
-        meta.setLore(lore);
-        meta.setCustomModelData(1337);
-        NamespacedKey key = new NamespacedKey(plugin, "locacaca");
-        meta.getPersistentDataContainer().set(key, PersistentDataType.STRING, "true");
-    
-        fruit.setItemMeta(meta);
-        return fruit;
-    }
-
-    @EventHandler
-    public void onEatLocacaca(PlayerItemConsumeEvent event) {
-        Player player = event.getPlayer();
-        ItemStack item = event.getItem();
-
-        if (item.getType() != Material.CARROT || !item.hasItemMeta()) return;
-
-        ItemMeta meta = item.getItemMeta();
-        PersistentDataContainer data = meta.getPersistentDataContainer();
-        NamespacedKey key = new NamespacedKey(plugin, "locacaca");
-
-        if (data.has(key, PersistentDataType.STRING) && data.get(key, PersistentDataType.STRING).equals("true")) {
-
-            PotionEffectType[] goodEffects = {
-                PotionEffectType.SPEED,
-                PotionEffectType.INCREASE_DAMAGE,
-                PotionEffectType.REGENERATION,
-                PotionEffectType.FAST_DIGGING,
-                PotionEffectType.HEALTH_BOOST
-            };
-
-            PotionEffectType[] badEffects = {
-                PotionEffectType.BLINDNESS,
-                PotionEffectType.SLOW,
-                PotionEffectType.CONFUSION,
-                PotionEffectType.WEAKNESS,
-                PotionEffectType.HUNGER
-            };
-
-            PotionEffectType good = goodEffects[new Random().nextInt(goodEffects.length)];
-            PotionEffectType bad = badEffects[new Random().nextInt(badEffects.length)];
-
-            player.addPotionEffect(new PotionEffect(good, Integer.MAX_VALUE, 0));
-            player.addPotionEffect(new PotionEffect(bad, Integer.MAX_VALUE, 0));
-
-            player.sendMessage(ChatColor.GREEN + "You feel empowered by " + ChatColor.GOLD + good.getName() + ChatColor.RED + " but cursed with " + ChatColor.DARK_RED + bad.getName());
-        }
-    }
-    //LOCACACA FRUIT E
 }

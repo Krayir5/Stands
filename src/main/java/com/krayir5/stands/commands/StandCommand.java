@@ -77,9 +77,7 @@ public class StandCommand implements CommandExecutor, TabCompleter {
     public ItemStack createLocacaca(){
         ItemStack fruit = new ItemStack(Material.CARROT);
         ItemMeta meta = fruit.getItemMeta();
-    
         meta.setDisplayName(ChatColor.LIGHT_PURPLE + "Locacaca Fruit");
-    
         List<String> lore = new ArrayList<>();
         lore.add(ChatColor.GRAY + "A mysterious fruit that grants");
         lore.add(ChatColor.GRAY + "power... at a cost.");
@@ -87,7 +85,21 @@ public class StandCommand implements CommandExecutor, TabCompleter {
         meta.setCustomModelData(1337);
         NamespacedKey key = new NamespacedKey(plugin, "locacaca");
         meta.getPersistentDataContainer().set(key, PersistentDataType.STRING, "true");
-    
+        fruit.setItemMeta(meta);
+        return fruit;
+    }
+
+    public ItemStack createNLocacaca(){
+        ItemStack fruit = new ItemStack(Material.CARROT);
+        ItemMeta meta = fruit.getItemMeta();
+        meta.setDisplayName(ChatColor.GREEN + "New Locacaca Fruit");
+        List<String> lore = new ArrayList<>();
+        lore.add(ChatColor.GRAY + "This new feel from this");
+        lore.add(ChatColor.GRAY + "plant. It feels... different.");
+        meta.setLore(lore);
+        meta.setCustomModelData(1337);
+        NamespacedKey key = new NamespacedKey(plugin, "locacaca");
+        meta.getPersistentDataContainer().set(key, PersistentDataType.STRING, "new");
         fruit.setItemMeta(meta);
         return fruit;
     }
@@ -102,6 +114,10 @@ public class StandCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (!(sender instanceof Player)){
+            sender.sendMessage(ChatColor.RED + "This command can only be used by players.");
+            return true;
+        }
         Player player = (Player) sender;
         UUID playerID = player.getUniqueId();
         try {
@@ -186,7 +202,19 @@ public class StandCommand implements CommandExecutor, TabCompleter {
                 break;
 
             case "locacaca":
+                if (!player.hasPermission("stand.admin") || !player.isOp()) {
+                    player.sendMessage(ChatColor.RED + "You don't have permission to use this command.");
+                    return true;
+                }
                 player.getInventory().addItem(createLocacaca());
+                break;
+
+            case "nlocacaca":
+                if (!player.hasPermission("stand.admin") || !player.isOp()) {
+                    player.sendMessage(ChatColor.RED + "You don't have permission to use this command.");
+                    return true;
+                }
+                player.getInventory().addItem(createNLocacaca());
                 break;
             
             case "delete":
