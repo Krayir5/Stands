@@ -20,4 +20,7 @@ Then while the arrow is on your main hand right clicking will give you a random 
 -PERMISSIONS-
 1. standp.admin The person that has this permission can use /stand reload command
 
+-TODO-
+1. With the upcoming JoJo Part 7 anime, I'll revisit to this project and update it to Minecraft last version and with the adds of new Stands. Although my other idea still in the making of the process(it eats a lot of ram when there's a lot of player so i'll try to improve it a bit) I'll add new things like JoJo Part 7's Stands with another things.
+
 You can also download the plugin in [Spigot](https://www.spigotmc.org/resources/stands-from-jjba.121947/)
