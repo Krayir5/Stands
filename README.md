@@ -25,5 +25,6 @@ With the coming of the new stage 2 and 3 I had some plans on working on this pro
 
 -TODO-
 1. With the upcoming JoJo Part 7 anime, I'll revisit to this project and update it to Minecraft last version and with the adds of new Stands. Although my other idea still in the making of the process(it eats a lot of ram when there's a lot of player so i'll try to improve it a bit) I'll add new things like JoJo Part 7's Stands with another things.
+2. With the latest snapshot(26.4-snapshot-3) we can see that snowballs now have a knockback so we need to change for the new versions of the game(yes i've been working on the new version compability)
 
 You can also download the plugin in [Spigot](https://www.spigotmc.org/resources/stands-from-jjba.121947/)
